@@ -71,7 +71,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'LightGBM'
-copyright = '2017, Microsoft Corporation'
+copyright = '2017, Microsoft Corporation. Translated by ApacheCN 开源组织'
 author = 'Microsoft Corporation'
 
 # The version info for the project you're documenting, acts as replacement for
