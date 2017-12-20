@@ -3,26 +3,26 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to LightGBM's documentation!
+欢迎来到 LightGBM 的中文文档!
 ====================================
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
+   :caption: 内容目录:
 
-   Installation Guide <Installation-Guide>
-   Quick Start <Quick-Start>
-   Python Quick Start <Python-Intro>
-   Features <Features>
-   Experiments <Experiments>
-   Parameters <Parameters>
-   Parameters Tuning <Parameters-Tuning>
+   安装指南 <Installation-Guide>
+   快速入门 <Quick-Start>
+   Python 快速入门 <Python-Intro>
+   特性 <Features>
+   实验 <Experiments>
+   参数 <Parameters>
+   参数优化 <Parameters-Tuning>
    Python API <Python-API>
-   Parallel Learning Guide <Parallel-Learning-Guide>
-   GPU Tutorial <GPU-Tutorial>
-   Advanced Topics <Advanced-Topics>
+   并行学习指南 <Parallel-Learning-Guide>
+   GPU 教程 <GPU-Tutorial>
+   进阶主题 <Advanced-Topics>
    FAQ <FAQ>
-   Development Guide <Development-Guide>
+   开发指南 <Development-Guide>
 
 .. toctree::
    :hidden:
@@ -33,7 +33,7 @@ Welcome to LightGBM's documentation!
    gcc-Tips
    README
 
-Indices and Tables
+索引和表
 ==================
 
 * :ref:`genindex`
