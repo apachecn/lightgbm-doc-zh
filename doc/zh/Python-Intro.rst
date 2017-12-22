@@ -1,76 +1,76 @@
-Python Package Introduction
+Python 包的相关介绍
 ===========================
 
-This document gives a basic walkthrough of LightGBM Python-package.
+该文档给出了有关 LightGBM Python 软件包的基本演练.
 
-**List of other helpful links**
+**其它有用的链接列表**
 
--  `Python Examples <https://github.com/Microsoft/LightGBM/tree/master/examples/python-guide>`__
+-  `Python 例子 <https://github.com/Microsoft/LightGBM/tree/master/examples/python-guide>`__
 
 -  `Python API <./Python-API.rst>`__
 
--  `Parameters Tuning <./Parameters-Tuning.rst>`__
+-  `参数优化 <./Parameters-Tuning.rst>`__
 
-Install
+安装
 -------
 
-Install Python-package dependencies,
-``setuptools``, ``wheel``, ``numpy`` and ``scipy`` are required, ``scikit-learn`` is required for sklearn interface and recommended:
+安装 Python 软件包的依赖,
+``setuptools``, ``wheel``, ``numpy`` 和 ``scipy`` 是必须的, ``scikit-learn`` 对于 sklearn 接口和推荐也是必须的:
 
 ::
 
     pip install setuptools wheel numpy scipy scikit-learn -U
 
-Refer to `Python-package`_ folder for the installation guide.
+参考 `Python-package`_ 安装指南文件夹.
 
-To verify your installation, try to ``import lightgbm`` in Python:
+为了验证是否安装成功, 可以在 Python 中 ``import lightgbm`` 试试:
 
 ::
 
     import lightgbm as lgb
 
-Data Interface
+数据接口
 --------------
 
-The LightGBM Python module is able to load data from:
+LightGBM Python 模块能够使用以下几种方式来加载数据:
 
--  libsvm/tsv/csv txt format file
+-  libsvm/tsv/csv txt format file（libsvm/tsv/csv 文本文件格式）
 
--  Numpy 2D array, pandas object
+-  Numpy 2D array, pandas object（Numpy 2维数组, pandas 对象）
 
--  LightGBM binary file
+-  LightGBM binary file（LightGBM 二进制文件）
 
-The data is stored in a ``Dataset`` object.
+加载后的数据存在 ``Dataset`` 对象中.
 
-**To load a libsvm text file or a LightGBM binary file into Dataset:**
+**要加载 ligsvm 文本文件或 LightGBM 二进制文件到 Dataset 中:**
 
 .. code:: python
 
     train_data = lgb.Dataset('train.svm.bin')
 
-**To load a numpy array into Dataset:**
+**要加载 numpy 数组到 Dataset 中:**
 
 .. code:: python
 
-    data = np.random.rand(500, 10)  # 500 entities, each contains 10 features
-    label = np.random.randint(2, size=500)  # binary target
+    data = np.random.rand(500, 10)  # 500 个样本, 每一个包含 10 个特征
+    label = np.random.randint(2, size=500)  # 二元目标变量,  0 和 1
     train_data = lgb.Dataset(data, label=label)
 
-**To load a scpiy.sparse.csr\_matrix array into Dataset:**
+**要加载 scpiy.sparse.csr\_matrix 数组到 Dataset 中:**
 
 .. code:: python
 
     csr = scipy.sparse.csr_matrix((dat, (row, col)))
     train_data = lgb.Dataset(csr)
 
-**Saving Dataset into a LightGBM binary file will make loading faster:**
+**保存 Dataset 到 LightGBM 二进制文件将会使得加载更快速:**
 
 .. code:: python
 
     train_data = lgb.Dataset('train.svm.txt')
     train_data.save_binary('train.bin')
 
-**Create validation data:**
+**创建验证数据:**
 
 .. code:: python
 
@@ -82,27 +82,27 @@ or
 
     test_data = lgb.Dataset('test.svm', reference=train_data)
 
-In LightGBM, the validation data should be aligned with training data.
+在 LightGBM 中, 验证数据应该与训练数据一致（格式一致）.
 
-**Specific feature names and categorical features:**
+**指定 feature names（特征名称）和 categorical features（分类特征）:**
 
 .. code:: python
 
     train_data = lgb.Dataset(data, label=label, feature_name=['c1', 'c2', 'c3'], categorical_feature=['c3'])
 
-LightGBM can use categorical features as input directly.
-It doesn't need to covert to one-hot coding, and is much faster than one-hot coding (about 8x speed-up).
+LightGBM 可以直接使用 categorical features（分类特征）作为 input（输入）.
+它不需要被转换成 one-hot coding（毒热编码）, 并且它比 one-hot coding（毒热编码）更快（约快上 8 倍）
 
-**Note**: You should convert your categorical features to ``int`` type before you construct ``Dataset``.
+**注意**: 在你构造 ``Dataset`` 之前, 你应该将分类特征转换为 ``int`` 类型的值.
 
-**Weights can be set when needed:**
+**当需要时可以设置权重:**
 
 .. code:: python
 
     w = np.random.rand(500, )
     train_data = lgb.Dataset(data, label=label, weight=w)
 
-or
+或者
 
 .. code:: python
 
@@ -110,110 +110,113 @@ or
     w = np.random.rand(500, )
     train_data.set_weight(w)
 
-And you can use ``Dataset.set_init_score()`` to set initial score, and ``Dataset.set_group()`` to set group/query data for ranking tasks.
+并且你也可以使用 ``Dataset.set_init_score()`` 来初始化 score（分数）, 以及使用 ``Dataset.set_group()`` ；来设置 group/query 数据以用于 ranking（排序）任务.
 
-**Memory efficent usage:**
+**内存的高使用:**
 
-The ``Dataset`` object in LightGBM is very memory-efficient, due to it only need to save discrete bins.
-However, Numpy/Array/Pandas object is memory cost.
-If you concern about your memory consumption. You can save memory accroding to following:
+LightGBM 中的 ``Dataset`` 对象由于只需要保存 discrete bins（离散的数据块）, 因此它具有很好的内存效率.
+然而, Numpy/Array/Pandas 对象的内存开销较大.
+如果你关心你的内存消耗. 您可以根据以下方式来节省内存: 
 
-1. Let ``free_raw_data=True`` (default is ``True``) when constructing the ``Dataset``
+1. 在构造 ``Dataset`` 时设置 ``free_raw_data=True`` （默认为 ``True``）
 
-2. Explicit set ``raw_data=None`` after the ``Dataset`` has been constructed
+2. 在 ``Dataset`` 被构造完之后手动设置 ``raw_data=None`` 
 
-3. Call ``gc``
+3. 调用 ``gc``
 
-Setting Parameters
+设置参数
 ------------------
 
-LightGBM can use either a list of pairs or a dictionary to set `Parameters <./Parameters.rst>`__.
-For instance:
+LightGBM 可以使用一个 pairs 的 list 或一个字典来设置 `参数 <./Parameters.rst>`__.
+例如:
 
--  Booster parameters:
+-  Booster（提升器）参数:
 
    .. code:: python
 
        param = {'num_leaves':31, 'num_trees':100, 'objective':'binary'}
        param['metric'] = 'auc'
 
--  You can also specify multiple eval metrics:
+-  您还可以指定多个 eval 指标:
 
    .. code:: python
 
        param['metric'] = ['auc', 'binary_logloss']
 
-Training
+训练
 --------
 
-Training a model requires a parameter list and data set:
+训练一个模型时, 需要一个 parameter list（参数列表）和 data set（数据集）:
 
 .. code:: python
 
     num_round = 10
     bst = lgb.train(param, train_data, num_round, valid_sets=[test_data])
 
-After training, the model can be saved:
+在训练完成后, 可以使用如下方式来存储模型:
 
 .. code:: python
 
     bst.save_model('model.txt')
 
-The trained model can also be dumped to JSON format:
+训练后的模型也可以转存为 JSON 的格式:
 
 .. code:: python
 
     json_model = bst.dump_model()
 
-A saved model can be loaded.
+以保存模型也可以使用如下的方式来加载.
 
 .. code:: python
 
     bst = lgb.Booster(model_file='model.txt')  #init model
 
-CV
---
+交叉验证
+--------
 
-Training with 5-fold CV:
+使用 5-折 方式的交叉验证来进行训练（4 个训练集, 1 个测试集）:
 
 .. code:: python
 
     num_round = 10
     lgb.cv(param, train_data, num_round, nfold=5)
 
-Early Stopping
+提前停止
 --------------
 
-If you have a validation set, you can use early stopping to find the optimal number of boosting rounds.
-Early stopping requires at least one set in ``valid_sets``. If there is more than one, it will use all of them:
+如果您有一个验证集, 你可以使用提前停止找到最佳数量的 boosting rounds（梯度次数）.
+提前停止需要在 ``valid_sets`` 中至少有一个集合.
+如果有多个，它们都会被使用:
 
 .. code:: python
 
     bst = lgb.train(param, train_data, num_round, valid_sets=valid_sets, early_stopping_rounds=10)
     bst.save_model('model.txt', num_iteration=bst.best_iteration)
 
-The model will train until the validation score stops improving.
-Validation error needs to improve at least every ``early_stopping_rounds`` to continue training.
+该模型将开始训练, 直到验证得分停止提高为止.
+验证错误需要至少每个 `early_stopping_rounds` 减少以继续训练.
 
-If early stopping occurs, the model will have an additional field: ``bst.best_iteration``.
-Note that ``train()`` will return a model from the last iteration, not the best one.
-And you can set ``num_iteration=bst.best_iteration`` when saving model.
+如果提前停止, 模型将有 1 个额外的字段: `bst.best_iteration`.
+请注意 `train()` 将从最后一次迭代中返回一个模型, 而不是最好的一个.
 
 This works with both metrics to minimize (L2, log loss, etc.) and to maximize (NDCG, AUC).
 Note that if you specify more than one evaluation metric, all of them will be used for early stopping.
 
-Prediction
+这与两个度量标准一起使用以达到最小化（L2, 对数损失, 等等）和最大化（NDCG, AUC）.
+请注意, 如果您指定多个评估指标, 则它们都会用于提前停止.
+
+预测
 ----------
 
-A model that has been trained or loaded can perform predictions on data sets:
+已经训练或加载的模型都可以对数据集进行预测:
 
 .. code:: python
 
-    # 7 entities, each contains 10 features
+    # 7 个样本, 每一个包含 10 个特征
     data = np.random.rand(7, 10)
     ypred = bst.predict(data)
 
-If early stopping is enabled during training, you can get predictions from the best iteration with ``bst.best_iteration``:
+如果在训练过程中启用了提前停止, 可以用 `bst.best_iteration` 从最佳迭代中获得预测结果:
 
 .. code:: python
 
