@@ -33,18 +33,18 @@ GPU 安装
 
 大约30秒后，服务器可以重新运转。
 
-如果你正在使用 AMD GPU, 你需要下载并安装 `AMDGPU-Pro`_ 驱动，同时安装 ``ocl-icd-libopencl1`` 和 ``ocl-icd-opencl-dev``两个包。
+如果你正在使用 AMD GPU, 你需要下载并安装 `AMDGPU-Pro`_ 驱动，同时安装 ``ocl-icd-libopencl1`` 和 ``ocl-icd-opencl-dev`` 两个包。
 
 编译 LightGBM
 --------------
 
-现在安装必要的生成工具和依赖：
+现在安装必要的编译工具和依赖项：
 
 ::
 
     sudo apt-get install --no-install-recommends git cmake build-essential libboost-dev libboost-system-dev libboost-filesystem-dev
 
-``NV6`` GPU 实例自带一个 320 GB 的极速 SSD，挂载在``/mnt``目录下。
+``NV6`` GPU 实例自带一个 320 GB 的极速 SSD，挂载在 ``/mnt`` 目录下。
 我们把它作为我们的工作环境（如果你正在使用自己的机器，可以跳过该步）：
 
 ::
@@ -66,9 +66,9 @@ GPU 安装
     make -j$(nproc)
     cd ..
 
-你可以看到有两个二进制文件生成了，``lightgbm`` 和 ``lib_lightgbm.so``
+你可以看到有两个二进制文件生成了，``lightgbm`` 和 ``lib_lightgbm.so`` 
 
-如果你正在 OSX 系统上编译，你可能需要在 ``src/treelearner/gpu_tree_learner.h``中移除 ``BOOST_COMPUTE_USE_OFFLINE_CACHE``宏指令以避免Boost.Compute中的冲突错误。
+如果你正在 OSX 系统上编译，你可能需要在 ``src/treelearner/gpu_tree_learner.h`` 中移除 ``BOOST_COMPUTE_USE_OFFLINE_CACHE`` 宏指令以避免 Boost.Compute 中的冲突错误。
 
 安装 Python 接口 (可选)
 -----------------------------------
@@ -83,7 +83,7 @@ GPU 安装
     sudo python setup.py install --precompile
     cd ..
 
-你需要设置一个额外的参数 ``"device" : "gpu"`` （同时也包括其他选项如 ``learning_rate``，``num_leaves``，等等）来在 Python 中使用 GPU.
+你需要设置一个额外的参数 ``"device" : "gpu"`` （同时也包括其他选项如 ``learning_rate`` ，``num_leaves`` ，等等）来在 Python 中使用 GPU.
 
 你可以阅读我们的 `Python Package Examples`_ 来获取更多关于如何使用 Python 接口的信息。
 
@@ -125,8 +125,8 @@ GPU 安装
     EOF
     echo "num_threads=$(nproc)" >> lightgbm_gpu.conf
 
-我们可以通过在配置文件中设置``device=gpu``来使 GPU 处于可用状态。
-默认将使用系统安装的第一个 GPU（``gpu_platform_id=0`` 以及 ``gpu_device_id=0``）。
+我们可以通过在配置文件中设置 ``device=gpu`` 来使 GPU 处于可用状态。
+默认将使用系统安装的第一个 GPU（ ``gpu_platform_id=0`` 以及 ``gpu_device_id=0`` ）。
 
 在 GPU 上运行你的第一个学习任务
 -----------------------------------
@@ -134,7 +134,7 @@ GPU 安装
 现在我们可以准备开始用 GPU 做训练了！
 
 首先我们希望确保 GPU 能够正确工作。
-运行如下代码来在 GPU 上训练，并记录下50次迭代后的AUC。
+运行如下代码来在 GPU 上训练，并记录下50次迭代后的 AUC。
 
 ::
 
