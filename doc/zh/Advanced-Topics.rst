@@ -1,16 +1,16 @@
 进阶主题
 ===============
 
-缺省值的处理
+缺失值的处理
 --------------------
 
--  LightGBM 通过默认的方式来处理缺省值，你可以通过设置 ``use_missing=false`` 来使其无效。
+-  LightGBM 通过默认的方式来处理缺失值，你可以通过设置 ``use_missing=false`` 来使其无效。
 
--  LightGBM 通过默认的的方式用 NA (NaN) 去表示缺省值，你可以通过设置 ``zero_as_missing=true`` 将其变为零。
+-  LightGBM 通过默认的的方式用 NA (NaN) 去表示缺失值，你可以通过设置 ``zero_as_missing=true`` 将其变为零。
 
 -  当设置 ``zero_as_missing=false`` （默认）时，在稀疏矩阵里 (和LightSVM) ，没有显示的值视为零。
 
--  当设置 ``zero_as_missing=true`` 时， NA 和 0 （包括在稀疏矩阵里，没有显示的值）视为缺省。
+-  当设置 ``zero_as_missing=true`` 时， NA 和 0 （包括在稀疏矩阵里，没有显示的值）视为缺失。
 
 
 分类特征的支持
@@ -38,7 +38,7 @@ LambdaRank
 
 -  使用 ``max_position`` 设置 NDCG 优化位置。
 
-参数整定
+参数优化
 -----------------
 
 -  参考 `参数优化 <./Parameters-Tuning.rst>`__ .
