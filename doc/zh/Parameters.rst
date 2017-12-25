@@ -1,43 +1,43 @@
-Parameters
+参数
 ==========
 
-This page contains all parameters in LightGBM.
+这个页面包含了 LightGBM 的所有参数.
 
-**List of other helpful links**
+**一些有用的链接列表**
 
 - `Python API <./Python-API.rst>`__
 
 - `Parameters Tuning <./Parameters-Tuning.rst>`__
 
-**External Links**
+**外部链接**
 
 - `Laurae++ Interactive Documentation`_
 
-**Update of 08/04/2017**
+**更新于 08/04/2017**
 
-Default values for the following parameters have changed:
+以下参数的默认值已经修改:
 
 -  ``min_data_in_leaf`` = 100 => 20
 -  ``min_sum_hessian_in_leaf`` = 10 => 1e-3
 -  ``num_leaves`` = 127 => 31
 -  ``num_iterations`` = 10 => 100
 
-Parameters Format
+参数格式
 -----------------
 
-The parameters format is ``key1=value1 key2=value2 ...``.
-And parameters can be set both in config file and command line.
-By using command line, parameters should not have spaces before and after ``=``.
-By using config files, one line can only contain one parameter. You can use ``#`` to comment.
+参数的格式为 ``key1=value1 key2=value2 ...``.
+并且，在配置文件和命令行中均可以设置参数.
+使用命令行设置参数时，在 ``=`` 前后都不应该有空格.
+使用配置文件设置参数时, 一行只能包含一个参数. 你可以使用 ``#`` 进行注释.
 
-If one parameter appears in both command line and config file, LightGBM will use the parameter in command line.
+如果一个参数在命令行和配置文件中均出现了, LightGBM 将会使用命令行中的该参数.
 
-Core Parameters
+核心参数
 ---------------
 
 -  ``config``, default=\ ``""``, type=string, alias=\ ``config_file``
 
-   -  path of config file
+   -  配置文件的路径
 
 -  ``task``, default=\ ``train``, type=enum, options=\ ``train``, ``predict``, ``convert_model``
 
@@ -45,7 +45,7 @@ Core Parameters
 
    -  ``predict``, alias=\ ``prediction``, ``test``, for prediction.
 
-   -  ``convert_model``, for converting model file into if-else format, see more information in `Convert model parameters <#convert-model-parameters>`__
+   -  ``convert_model``, 要将模型文件转换成 if-else 格式, 可以查看这个链接获取更多信息 `Convert model parameters <#convert-model-parameters>`__
 
 -  ``application``, default=\ ``regression``, type=enum,
    options=\ ``regression``, ``regression_l1``, ``huber``, ``fair``, ``poisson``, ``quantile``, ``quantile_l2``,
@@ -66,238 +66,237 @@ Core Parameters
 
       -  ``quantile``, `Quantile regression`_
 
-      -  ``quantile_l2``, like the ``quantile``, but L2 loss is used instead
+      -  ``quantile_l2``, 类似于 ``quantile``, 但是使用了 L2 loss 
 
    -  ``binary``, binary `log loss`_ classification application
 
    -  multi-class classification application
 
-      -  ``multiclass``, `softmax`_ objective function, ``num_class`` should be set as well
+      -  ``multiclass``, `softmax`_ 目标函数, 应该设置好 ``num_class`` 
 
-      -  ``multiclassova``, `One-vs-All`_ binary objective function, ``num_class`` should be set as well
+      -  ``multiclassova``, `One-vs-All`_ 二分类目标函数, 应该设置好 ``num_class`` 
 
    -  cross-entropy application
 
-      -  ``xentropy``, objective function for cross-entropy (with optional linear weights), alias=\ ``cross_entropy``
+      -  ``xentropy``, 目标函数为 cross-entropy (同时有可选择的线性权重), alias=\ ``cross_entropy``
 
-      -  ``xentlambda``, alternative parameterization of cross-entropy, alias=\ ``cross_entropy_lambda``
+      -  ``xentlambda``, 替代参数化的 cross-entropy, alias=\ ``cross_entropy_lambda``
 
-      -  the label is anything in interval [0, 1]
+      -  标签是 [0, 1] 间隔内的任意值
 
    -  ``lambdarank``, `lambdarank`_ application
 
-      -  the label should be ``int`` type in lambdarank tasks, and larger number represent the higher relevance (e.g. 0:bad, 1:fair, 2:good, 3:perfect)
+      -  在 lambdarank 任务中标签应该为 ``int`` 类型, 数值越大代表相关性越高 (e.g. 0:bad, 1:fair, 2:good, 3:perfect)
 
-      -  ``label_gain`` can be used to set the gain(weight) of ``int`` label
+      -  ``label_gain`` 可以被用来设置 ``int`` 标签的增益 (权重)
 
 -  ``boosting``, default=\ ``gbdt``, type=enum,
    options=\ ``gbdt``, ``rf``, ``dart``, ``goss``,
    alias=\ ``boost``, ``boosting_type``
 
-   -  ``gbdt``, traditional Gradient Boosting Decision Tree
+   -  ``gbdt``, 传统的梯度提升决策树
 
-   -  ``rf``, Random Forest
+   -  ``rf``, Random Forest (随机森林)
 
    -  ``dart``, `Dropouts meet Multiple Additive Regression Trees`_
 
-   -  ``goss``, Gradient-based One-Side Sampling
+   -  ``goss``, Gradient-based One-Side Sampling (基于梯度的单侧采样)
 
 -  ``data``, default=\ ``""``, type=string, alias=\ ``train``, ``train_data``
 
-   -  training data, LightGBM will train from this data
+   -  训练数据, LightGBM 将会使用这个数据进行训练
 
 -  ``valid``, default=\ ``""``, type=multi-string, alias=\ ``test``, ``valid_data``, ``test_data``
 
-   -  validation/test data, LightGBM will output metrics for these data
+   -  验证/测试 数据, LightGBM 将输出这些数据的度量
 
-   -  support multi validation data, separate by ``,``
+   -  支持多验证数据集, 以 ``,`` 分割
 
 -  ``num_iterations``, default=\ ``100``, type=int,
    alias=\ ``num_iteration``, ``num_tree``, ``num_trees``, ``num_round``, ``num_rounds``, ``num_boost_round``
 
-   -  number of boosting iterations
+   -  boosting 的迭代次数
 
-   -  **Note**: for Python/R package, **this parameter is ignored**,
-      use ``num_boost_round`` (Python) or ``nrounds`` (R) input arguments of ``train`` and ``cv`` methods instead
+   -  **Note**: 对于 Python/R 包, **这个参数是被忽略的**,
+      使用 ``train`` and ``cv`` 的输入参数 ``num_boost_round`` (Python) or ``nrounds`` (R) 来代替
 
-   -  **Note**: internally, LightGBM constructs ``num_class * num_iterations`` trees for ``multiclass`` problems
+   -  **Note**: 在内部, LightGBM 对于 ``multiclass`` 问题设置 ``num_class * num_iterations`` 棵树
 
 -  ``learning_rate``, default=\ ``0.1``, type=double, alias=\ ``shrinkage_rate``
 
-   -  shrinkage rate
+   -  shrinkage rate (收缩率)
 
-   -  in ``dart``, it also affects on normalization weights of dropped trees
+   -  在 ``dart`` 中, 它还影响了 dropped trees 的归一化权重
 
 -  ``num_leaves``, default=\ ``31``, type=int, alias=\ ``num_leaf``
 
-   -  number of leaves in one tree
+   -  一棵树上的叶子数
 
 -  ``tree_learner``, default=\ ``serial``, type=enum, options=\ ``serial``, ``feature``, ``data``, ``voting``, alias=\ ``tree``
 
-   -  ``serial``, single machine tree learner
+   -  ``serial``, 单台机器的 tree learner
 
-   -  ``feature``, alias=\ ``feature_parallel``, feature parallel tree learner
+   -  ``feature``, alias=\ ``feature_parallel``, 特征并行的 tree learner
 
-   -  ``data``, alias=\ ``data_parallel``, data parallel tree learner
+   -  ``data``, alias=\ ``data_parallel``, 数据并行的 tree learner
 
-   -  ``voting``, alias=\ ``voting_parallel``, voting parallel tree learner
+   -  ``voting``, alias=\ ``voting_parallel``, 投票并行的 tree learner
 
-   -  refer to `Parallel Learning Guide <./Parallel-Learning-Guide.rst>`__ to get more details
+   -  请阅读 `Parallel Learning Guide <./Parallel-Learning-Guide.rst>`__ 来了解更多细节
 
 -  ``num_threads``, default=\ ``OpenMP_default``, type=int, alias=\ ``num_thread``, ``nthread``
 
-   -  number of threads for LightGBM
+   -  LightGBM 的线程数
 
-   -  for the best speed, set this to the number of **real CPU cores**,
-      not the number of threads (most CPU using `hyper-threading`_ to generate 2 threads per CPU core)
+   -  为了更快的速度，将此设置为真正的CPU内核数，而不是线程的数量 (大多数CPU使用超线程来使每个CPU内核生成2个线程)
 
-   -  do not set it too large if your dataset is small (do not use 64 threads for a dataset with 10,000 rows for instance)
+   -  当你的数据集小的时候不要将它设置的过大 (比如，当数据集有10,000行时不要使用64线程)
 
-   -  be aware a task manager or any similar CPU monitoring tool might report cores not being fully utilized. **This is normal**
+   -  请注意，任务管理器或任何类似的CPU监视工具可能会报告未被充分利用的内核. **这是正常的**
 
-   -  for parallel learning, should not use full CPU cores since this will cause poor performance for the network
+   -  对于并行学习，不应该使用全部的CPU内核，因为这会导致网络性能不佳
 
 -  ``device``, default=\ ``cpu``, options=\ ``cpu``, ``gpu``
 
-   -  choose device for the tree learning, you can use GPU to achieve the faster learning
+   -  为树学习选择设备，你可以使用 GPU 来获得更快的学习速度
 
-   -  **Note**: it is recommended to use the smaller ``max_bin`` (e.g. 63) to get the better speed up
+   -  **Note**: 建议使用较小的 ``max_bin`` (e.g. 63) 来获得更快的速度
 
-   -  **Note**: for the faster speed, GPU use 32-bit float point to sum up by default, may affect the accuracy for some tasks.
-      You can set ``gpu_use_dp=true`` to enable 64-bit float point, but it will slow down the training
+   -  **Note**: 为了加快学习速度， GPU 默认使用32位浮点数来求和.
+      你可以设置 ``gpu_use_dp=true`` 来启用64位浮点数, 但是它会使训练速度降低
 
-   -  **Note**: refer to `Installation Guide <./Installation-Guide.rst#build-gpu-version>`__ to build with GPU
+   -  **Note**: 请参考 `Installation Guide <./Installation-Guide.rst#build-gpu-version>`__ 来构建 GPU 版本
 
-Learning Control Parameters
+学习控制参数
 ---------------------------
 
 -  ``max_depth``, default=\ ``-1``, type=int
 
-   -  limit the max depth for tree model. This is used to deal with over-fitting when ``#data`` is small. Tree still grows by leaf-wise
+   -  限制树模型的最大深度. 这可以在 ``#data`` 小的情况下防止过拟合. 树仍然可以通过 leaf-wise 生长.
 
-   -  ``< 0`` means no limit
+   -  ``< 0`` 意味着没有限制.
 
 -  ``min_data_in_leaf``, default=\ ``20``, type=int, alias=\ ``min_data_per_leaf`` , ``min_data``, ``min_child_samples``
 
-   -  minimal number of data in one leaf. Can be used to deal with over-fitting
+   -  一个叶子上数据的最小数量. 可以用来处理过拟合.
 
 -  ``min_sum_hessian_in_leaf``, default=\ ``1e-3``, type=double,
    alias=\ ``min_sum_hessian_per_leaf``, ``min_sum_hessian``, ``min_hessian``, ``min_child_weight``
 
-   -  minimal sum hessian in one leaf. Like ``min_data_in_leaf``, it can be used to deal with over-fitting
+   -  一个叶子上的最小 hessian 和. 类似于 ``min_data_in_leaf``, 可以用来处理过拟合.
 
 -  ``feature_fraction``, default=\ ``1.0``, type=double, ``0.0 < feature_fraction < 1.0``, alias=\ ``sub_feature``, ``colsample_bytree``
 
-   -  LightGBM will randomly select part of features on each iteration if ``feature_fraction`` smaller than ``1.0``.
-      For example, if set to ``0.8``, will select 80% features before training each tree
+   -  如果 ``feature_fraction`` 小于 ``1.0``， LightGBM 将会在每次迭代中随机选择部分特征.
+      例如, 如果设置为 ``0.8``, 将会在每棵树训练之前选择 80% 的特征
 
-   -  can be used to speed up training
+   -  可以用来加速训练
 
-   -  can be used to deal with over-fitting
+   -  可以用来处理过拟合
 
 -  ``feature_fraction_seed``, default=\ ``2``, type=int
 
-   -  random seed for ``feature_fraction``
+   -  ``feature_fraction`` 的随机数种子
 
 -  ``bagging_fraction``, default=\ ``1.0``, type=double, ``0.0 < bagging_fraction < 1.0``, alias=\ ``sub_row``, ``subsample``
 
-   -  like ``feature_fraction``, but this will randomly select part of data without resampling
+   -  类似于 ``feature_fraction``, 但是它将在不进行重采样的情况下随机选择部分数据
 
-   -  can be used to speed up training
+   -  可以用来加速训练
 
-   -  can be used to deal with over-fitting
+   -  可以用来处理过拟合
 
-   -  **Note**: To enable bagging, ``bagging_freq`` should be set to a non zero value as well
+   -  **Note**: 为了启用 bagging, ``bagging_freq`` 应该设置为非零值
 
 -  ``bagging_freq``, default=\ ``0``, type=int, alias=\ ``subsample_freq``
 
-   -  frequency for bagging, ``0`` means disable bagging. ``k`` means will perform bagging at every ``k`` iteration
+   -  bagging 的频率, ``0`` 意味着禁用 bagging. ``k`` 意味着每 ``k`` 次迭代执行bagging
 
-   -  **Note**: to enable bagging, ``bagging_fraction`` should be set as well
+   -  **Note**: 为了启用 bagging, ``bagging_fraction`` 设置适当
 
 -  ``bagging_seed`` , default=\ ``3``, type=int, alias=\ ``bagging_fraction_seed``
 
-   -  random seed for bagging
+   -  bagging 随机数种子
 
 -  ``early_stopping_round``, default=\ ``0``, type=int, alias=\ ``early_stopping_rounds``, ``early_stopping``
 
-   -  will stop training if one metric of one validation data doesn't improve in last ``early_stopping_round`` rounds
+   -  如果一个验证集的度量在 ``early_stopping_round`` 循环中没有提升，将停止训练
 
 -  ``lambda_l1``, default=\ ``0``, type=double, alias=\ ``reg_alpha``
 
-   -  L1 regularization
+   -  L1 正则
 
 -  ``lambda_l2``, default=\ ``0``, type=double, alias=\ ``reg_lambda``
 
-   -  L2 regularization
+   -  L2 正则
 
 -  ``min_split_gain``, default=\ ``0``, type=double, alias=\ ``min_gain_to_split``
 
-   -  the minimal gain to perform split
+   -  执行切分的最小增益
 
 -  ``drop_rate``, default=\ ``0.1``, type=double
 
-   -  only used in ``dart``
+   -  仅仅在 ``dart`` 时使用
 
 -  ``skip_drop``, default=\ ``0.5``, type=double
 
-   -  only used in ``dart``, probability of skipping drop
+   -  仅仅在 ``dart`` 时使用, 跳过 drop 的概率
 
 -  ``max_drop``, default=\ ``50``, type=int
 
-   -  only used in ``dart``, max number of dropped trees on one iteration
+   -  仅仅在 ``dart`` 时使用, 一次迭代中删除树的最大数量
    
-   -  ``<=0`` means no limit
+   -  ``<=0`` 意味着没有限制
 
 -  ``uniform_drop``, default=\ ``false``, type=bool
 
-   -  only used in ``dart``, set this to ``true`` if want to use uniform drop
+   -  仅仅在 ``dart`` 时使用, 如果想要均匀的删除，将它设置为 ``true`` 
 
 -  ``xgboost_dart_mode``, default=\ ``false``, type=bool
 
-   -  only used in ``dart``, set this to ``true`` if want to use xgboost dart mode
+   -  仅仅在 ``dart`` 时使用, 如果想要使用 xgboost dart 模式，将它设置为 ``true``  
 
 -  ``drop_seed``, default=\ ``4``, type=int
 
-   -  only used in ``dart``, random seed to choose dropping models
+   -  仅仅在 ``dart`` 时使用, 选择 dropping models 的随机数种子
 
 -  ``top_rate``, default=\ ``0.2``, type=double
 
-   -  only used in ``goss``, the retain ratio of large gradient data
+   -  仅仅在 ``goss`` 时使用, 大梯度数据的保留比例
 
 -  ``other_rate``, default=\ ``0.1``, type=int
 
-   -  only used in ``goss``, the retain ratio of small gradient data
+   -  仅仅在 ``goss`` 时使用, 小梯度数据的保留比例
 
 -  ``min_data_per_group``, default=\ ``100``, type=int
 
-   -  min number of data per categorical group
+   -  每个分类组的最小数据量
 
 -  ``max_cat_threshold``, default=\ ``32``, type=int
 
-   -  use for the categorical features
+   -  用于分类特征
 
-   -  limit the max threshold points in categorical features
+   -  限制分类特征的最大阈值
 
 -  ``cat_smooth``, default=\ ``10``, type=double
 
-   -  used for the categorical features
+   -  用于分类特征
 
-   -  this can reduce the effect of noises in categorical features, especially for categories with few data
+   -  这可以降低噪声在分类特征中的影响, 尤其是对数据很少的类别
 
 -  ``cat_l2``, default=\ ``10``, type=double
 
-   -  L2 regularization in categorcial split
+   -  分类切分中的 L2 正则
 
 -  ``max_cat_to_onehot``, default=\ ``4``, type=int
 
-   -  when number of categories of one feature smaller than or equal to ``max_cat_to_onehot``, one-vs-other split algorithm will be used
+   -  当一个特征的类别数小于或等于 ``max_cat_to_onehot`` 时, one-vs-other 切分算法将会被使用
 
 -  ``top_k``, default=\ ``20``, type=int, alias=\ ``topk``
 
-   -  used in `Voting parallel <./Parallel-Learning-Guide.rst#choose-appropriate-parallel-algorithm>`__
+   -  被使用在 `Voting parallel <./Parallel-Learning-Guide.rst#choose-appropriate-parallel-algorithm>`__ 中
 
-   -  set this to larger value for more accurate result, but it will slow down the training speed
+   -  将它设置为更大的值可以获得更精确的结果，但会减慢训练速度
 
 IO Parameters
 -------------
