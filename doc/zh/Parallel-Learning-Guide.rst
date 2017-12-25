@@ -11,7 +11,7 @@
 LightGBM 现已提供了以下并行学习算法.
 
 +--------------------------+---------------------------+
-| **并行算法**   | **使用方法**            |
+| **Parallel Algorithm**   | **How to Use**            |
 +==========================+===========================+
 | Data parallel            | ``tree_learner=data``     |
 +--------------------------+---------------------------+
@@ -23,11 +23,11 @@ LightGBM 现已提供了以下并行学习算法.
 这些算法适用于不同场景,如下表所示:
 
 +-------------------------+----------------------+----------------------+
-|                         | **#数据量较小**   | **#数据量较大**   |
+|                         | **#data is small**   | **#data is large**   |
 +=========================+======================+======================+
-| **#特征较少**   | Feature Parallel     | Data Parallel        |
+| **#feature is small**   | Feature Parallel     | Data Parallel        |
 +-------------------------+----------------------+----------------------+
-| **#特征较多**   | Feature Parallel     | Voting Parallel      |
+| **#feature is large**   | Feature Parallel     | Voting Parallel      |
 +-------------------------+----------------------+----------------------+
 
 在 `optimization in parallel learning <./Features.rst#optimization-in-parallel-learning>`__ 了解更多并行算法的细节.
