@@ -1,34 +1,34 @@
-Experiments
+实验
 ===========
 
-Comparison Experiment
+对比实验
 ---------------------
 
-For the detailed experiment scripts and output logs, please refer to this `repo`_.
+详细的实验脚本和输出日志部分请参考  `repo`_.
 
-Data
+数据集
 ^^^^
 
-We use 4 datasets to conduct our comparison experiments. Details of data are listed in the following table:
+我们使用4个数据集进行对比实验，有关数据的细节在下表列出：
 
 +-------------+-------------------------+------------------------------------------------------------------------+-------------------+----------------+---------------------------------------------+
-| **Data**    | **Task**                | **Link**                                                               | **#Train\_Set**   | **#Feature**   | **Comments**                                |
+| **数据集**  | **任务**                | **链接**                                                               | **训练集**        | **特征**       | **注释**                                    |
 +=============+=========================+========================================================================+===================+================+=============================================+
-| Higgs       | Binary classification   | `link <https://archive.ics.uci.edu/ml/datasets/HIGGS>`__               | 10,500,000        | 28             | use last 500,000 samples as test set        |
+| Higgs       |   二分类                | `link <https://archive.ics.uci.edu/ml/datasets/HIGGS>`__               | 10,500,000        | 28             | 使用余下50万个样本作为测试集                |
 +-------------+-------------------------+------------------------------------------------------------------------+-------------------+----------------+---------------------------------------------+
-| Yahoo LTR   | Learning to rank        | `link <https://webscope.sandbox.yahoo.com/catalog.php?datatype=c>`__   | 473,134           | 700            | set1.train as train, set1.test as test      |
+| Yahoo LTR   | 机器学习排序            | `link <https://webscope.sandbox.yahoo.com/catalog.php?datatype=c>`__   | 473,134           | 700            | set1.train为训练集，set1.test为测试集       |
 +-------------+-------------------------+------------------------------------------------------------------------+-------------------+----------------+---------------------------------------------+
-| MS LTR      | Learning to rank        | `link <http://research.microsoft.com/en-us/projects/mslr/>`__          | 2,270,296         | 137            | {S1,S2,S3} as train set, {S5} as test set   |
+| MS LTR      | 机器学习排序            | `link <http://research.microsoft.com/en-us/projects/mslr/>`__          | 2,270,296         | 137            | {S1,S2,S3}为训练集，{S5} 为测试集           |
 +-------------+-------------------------+------------------------------------------------------------------------+-------------------+----------------+---------------------------------------------+
-| Expo        | Binary classification   | `link <http://stat-computing.org/dataexpo/2009/>`__                    | 11,000,000        | 700            | use last 1,000,000 as test set              |
+| Expo        | 二分类                  | `link <http://stat-computing.org/dataexpo/2009/>`__                    | 11,000,000        | 700            | 使用余下100W个样本作为测试集                |
 +-------------+-------------------------+------------------------------------------------------------------------+-------------------+----------------+---------------------------------------------+
-| Allstate    | Binary classification   | `link <https://www.kaggle.com/c/ClaimPredictionChallenge>`__           | 13,184,290        | 4228           | use last 1,000,000 as test set              |
+| Allstate    | 二分类                  | `link <https://www.kaggle.com/c/ClaimPredictionChallenge>`__           | 13,184,290        | 4228           | 使用余下100W个样本作为测试集                |
 +-------------+-------------------------+------------------------------------------------------------------------+-------------------+----------------+---------------------------------------------+
 
-Environment
+硬件环境
 ^^^^^^^^^^^
 
-We use one Linux server as experiment platform, details are listed in the following table:
+我们使用一台Linux服务器作为实验平台，具体配置如下：
 
 +--------------------+-------------------+-----------------------+
 | **OS**             | **CPU**           | **Memory**            |
@@ -36,17 +36,17 @@ We use one Linux server as experiment platform, details are listed in the follow
 | Ubuntu 14.04 LTS   | 2 \* E5-2670 v3   | DDR4 2133Mhz, 256GB   |
 +--------------------+-------------------+-----------------------+
 
-Baseline
+底层
 ^^^^^^^^
 
-We use `xgboost`_ as a baseline.
+我们使用 `xgboost`_ 作为底层算法。
 
-Both xgboost and LightGBM are built with OpenMP support.
+并且 xgboost 和 LightGBM 都基于 OpenMP 构建。
 
-Settings
+设置
 ^^^^^^^^
 
-We set up total 3 settings for experiments, the parameters of these settings are:
+我们为该实验建立了3个设置 ， 这些设置的参数如下：
 
 1. xgboost:
 
@@ -59,7 +59,7 @@ We set up total 3 settings for experiments, the parameters of these settings are
        tree_method = exact
        min_child_weight = 100
 
-2. xgboost\_hist (using histogram based algorithm):
+2. xgboost\_hist (使用直方图算法):
 
    .. code::
 
@@ -83,22 +83,25 @@ We set up total 3 settings for experiments, the parameters of these settings are
        num_threads = 16
        min_data_in_leaf = 0
        min_sum_hessian_in_leaf = 100
+       
+xgboost 通过  ``max_depth`` 对建树进行深度限制与模型复杂度控制 。
 
-xgboost grows tree depth-wise and controls model complexity by ``max_depth``.
-LightGBM uses leaf-wise algorithm instead and controls model complexity by ``num_leaves``.
-So we cannot compare them in the exact same model setting. For the tradeoff, we use xgboost with ``max_depth=8``, which will have max number leaves to 255, to compare with LightGBM with ``num_leves=255``.
+LightGBM 通过  ``num_leaves`` 执行带深度限制的leaf-wise叶子生长策略与模型复杂度控制。
 
-Other parameters are default values.
+因此我们无法设置完全相同的模型进行比较。为了相对权衡， 我们在xgboost中设置 ``max_depth=8`` 以使叶子数量达到最大数量255与LightGBM中设置  ``num_leves=255`` 进行比较。
 
-Result
+
+其他参数皆为默认值
+
+结论
 ^^^^^^
 
-Speed
+效率
 '''''
 
-For speed comparison, we only run the training task, which is without any test or metric output. And we don't count the time for IO.
+为了比较效率, 我们只运行没有任何测试或者度量输出的训练进程，并且我们不计算IO的时间。
 
-The following table is the comparison of time cost:
+如下是耗时的对比表格：
 
 +-------------+---------------+---------------------+------------------+
 | **Data**    | **xgboost**   | **xgboost\_hist**   | **LightGBM**     |
@@ -114,12 +117,12 @@ The following table is the comparison of time cost:
 | Allstate    | 2867.22 s     | 1355.71 s           | **348.084475 s** |
 +-------------+---------------+---------------------+------------------+
 
-We found LightGBM is faster than xgboost on all experiment data sets.
+我们发现在所有数据集上LightGBM都比xgboost快。
 
-Accuracy
+准确率
 ''''''''
 
-For accuracy comparison, we use the accuracy on test data set to have a fair comparison.
+为了比较准确率, 我们使用数据集测试集部分的准确率进行公平比较。
 
 +-------------+-----------------+---------------+---------------------+----------------+
 | **Data**    | **Metric**      | **xgboost**   | **xgboost\_hist**   | **LightGBM**   |
@@ -147,10 +150,10 @@ For accuracy comparison, we use the accuracy on test data set to have a fair com
 | Allstate    | AUC             | 0.607201      | 0.609042            | 0.609167       |
 +-------------+-----------------+---------------+---------------------+----------------+
 
-Memory Consumption
+内存消耗
 ''''''''''''''''''
 
-We monitor RES while running training task. And we set ``two_round=true`` (will increase data-loading time, but reduce peak memory usage, not affect training speed or accuracy) in LightGBM to reduce peak memory usage.
+我们在运行训练任务时监视RES，并在LightGBM中设置  ``two_round=true``  （将增加数据载入时间，但会减少峰值内存使用量，不影响训练速度和准确性）以减少峰值内存使用量。
 
 +-------------+---------------+---------------------+----------------+
 | **Data**    | **xgboost**   | **xgboost\_hist**   | **LightGBM**   |
@@ -166,29 +169,30 @@ We monitor RES while running training task. And we set ``two_round=true`` (will 
 | Allstate    | 6.237GB       | 4.990GB             | **1.027GB**    |
 +-------------+---------------+---------------------+----------------+
 
-Parallel Experiment
+并行测试
 -------------------
 
-Data
+数据集
 ^^^^
 
-We use a terabyte click log dataset to conduct parallel experiments. Details are listed in following table:
+我们使用 ``terabyte click log`` 数据集进行并行测试，详细信息如下表：
 
 +------------+-------------------------+------------+-----------------+----------------+
-| **Data**   | **Task**                | **Link**   | **#Data**       | **#Feature**   |
+| **数据**   | **任务**                | **链接**   | **数据集**      | **特征**       |
 +============+=========================+============+=================+================+
-| Criteo     | Binary classification   | `link`_    | 1,700,000,000   | 67             |
+| Criteo     | 二分类                  | `link`_    | 1,700,000,000   | 67             |
 +------------+-------------------------+------------+-----------------+----------------+
 
-This data contains 13 integer features and 26 category features of 24 days click log.
-We statistic the CTR and count for these 26 category features from the first ten days,
-then use next ten days' data, which had been replaced the category features by the corresponding CTR and count, as training data.
-The processed training data hava total 1.7 billions records and 67 features.
+该数据集包含了24天点击记录，其中有13个整数特征与26个类别特征。
 
-Environment
+我们统计了该数据集26个类别前十天的点击率和计数，使用接下来十天的数据作为训练集并且该训练集中类别已与点击率和计数相对应。
+
+处理后的训练集共有17亿条数据和67个特征。
+
+环境
 ^^^^^^^^^^^
 
-We use 16 Windows servers as experiment platform, details are listed in following table:
+我们使用了16台Windows服务器作为实验平台，详细信息如下表：
 
 +----------------------+-----------------+----------------------+-------------------------------+
 | **OS**               | **CPU**         | **Memory**           | **Network Adapter**           |
@@ -197,7 +201,7 @@ We use 16 Windows servers as experiment platform, details are listed in followin
 |                      |                 |                      | RDMA support                  |
 +----------------------+-----------------+----------------------+-------------------------------+
 
-Settings
+设置：
 ^^^^^^^^
 
 .. code::
@@ -208,11 +212,11 @@ Settings
     num_thread = 16
     tree_learner = data
 
-We use data parallel here, since this data is large in ``#data`` but small in ``#feature``.
+我们在此使用并行数据，因为该数据集数据量大但是特征少。
 
-Other parameters are default values.
+其他参数皆为默认值
 
-Result
+结论
 ^^^^^^
 
 +----------------+---------------------+---------------------------------+
@@ -229,12 +233,12 @@ Result
 | 16             | 42 s                | 11GB                            |
 +----------------+---------------------+---------------------------------+
 
-From the results, we find that LightGBM performs linear speed up in parallel learning.
+从结果看，我们发现 LightGBM 在并行学习中需要线性加速。
 
-GPU Experiments
+GPU 实验
 ---------------
 
-Refer to `GPU Performance <./GPU-Performance.rst>`__.
+参考  `GPU Performance <./GPU-Performance.rst>`__.
 
 .. _repo: https://github.com/guolinke/boosting_tree_benchmarks
 
