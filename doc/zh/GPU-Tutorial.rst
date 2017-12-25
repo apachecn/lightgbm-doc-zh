@@ -5,7 +5,7 @@ LightGBM GPU 教程
 
 对于 Windows, 请参阅 `GPU Windows 教程 <./GPU-Windows.rst>`__.
 
-我们将用 `Microsoft Azure 云计算平台`_ 上的 GPU 实例做演示，
+我们将用 `Microsoft Azure cloud computing platform`_ 上的 GPU 实例做演示，
 但你可以使用具有现代 AMD 或 NVIDIA GPU 的任何机器。
 
 GPU 安装
