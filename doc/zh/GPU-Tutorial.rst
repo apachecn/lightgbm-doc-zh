@@ -31,14 +31,14 @@ GPU 安装
 
     sudo init 6
 
-大约30秒后，服务器可以重新运转。
+大约 30 秒后，服务器可以重新运转。
 
 如果你正在使用 AMD GPU, 你需要下载并安装 `AMDGPU-Pro`_ 驱动，同时安装 ``ocl-icd-libopencl1`` 和 ``ocl-icd-opencl-dev`` 两个包。
 
 编译 LightGBM
 --------------
 
-现在安装必要的编译工具和依赖项：
+现在安装必要的生成工具和依赖:
 
 ::
 
@@ -53,7 +53,7 @@ GPU 安装
     sudo chown $(whoami):$(whoami) /mnt/workspace
     cd /mnt/workspace
 
-现在我们可以准备好校验 LightGBM 并使用 GPU 支持来编译它：
+现在我们可以准备好校验 LightGBM 并使用 GPU 支持来编译它:
 
 ::
 
@@ -73,7 +73,7 @@ GPU 安装
 安装 Python 接口 (可选)
 -----------------------------------
 
-如果你希望使用 LightGBM 的 Python 接口，你现在可以安装它（同时包括一些必要的 Python 依赖包）：
+如果你希望使用 LightGBM 的 Python 接口，你现在可以安装它（同时包括一些必要的 Python 依赖包）:
 
 ::
 
@@ -83,7 +83,7 @@ GPU 安装
     sudo python setup.py install --precompile
     cd ..
 
-你需要设置一个额外的参数 ``"device" : "gpu"`` （同时也包括其他选项如 ``learning_rate`` ，``num_leaves`` ，等等）来在 Python 中使用 GPU.
+你需要设置一个额外的参数 ``"device" : "gpu"`` （同时也包括其他选项如 ``learning_rate``, ``num_leaves``, 等等）来在 Python 中使用 GPU.
 
 你可以阅读我们的 `Python Package Examples`_ 来获取更多关于如何使用 Python 接口的信息。
 
@@ -126,7 +126,7 @@ GPU 安装
     echo "num_threads=$(nproc)" >> lightgbm_gpu.conf
 
 我们可以通过在配置文件中设置 ``device=gpu`` 来使 GPU 处于可用状态。
-默认将使用系统安装的第一个 GPU（ ``gpu_platform_id=0`` 以及 ``gpu_device_id=0`` ）。
+默认将使用系统安装的第一个 GPU (``gpu_platform_id=0`` 以及 ``gpu_device_id=0``).
 
 在 GPU 上运行你的第一个学习任务
 -----------------------------------
@@ -134,13 +134,13 @@ GPU 安装
 现在我们可以准备开始用 GPU 做训练了！
 
 首先我们希望确保 GPU 能够正确工作。
-运行如下代码来在 GPU 上训练，并记录下50次迭代后的 AUC。
+运行如下代码来在 GPU 上训练，并记录下 50 次迭代后的 AUC。
 
 ::
 
     ./lightgbm config=lightgbm_gpu.conf data=higgs.train valid=higgs.test objective=binary metric=auc
 
-现在用如下代码在 CPU 上训练相同的数据集。你应该能观察到相似的 AUC：
+现在用如下代码在 CPU 上训练相同的数据集. 你应该能观察到相似的 AUC：
 
 ::
 
@@ -152,7 +152,7 @@ GPU 安装
 
     ./lightgbm config=lightgbm_gpu.conf data=higgs.train objective=binary metric=auc
 
-CPU 的速度测试：
+CPU 的速度测试:
 
 ::
 
@@ -160,14 +160,14 @@ CPU 的速度测试：
 
 你可以观察到在该 GPU 上加速了超过三倍.
 
-GPU 加速也可以用于其他任务/指标上（回归，多类别分类器，排序，等等）。
-比如，我们可以在一个回归任务下训练 Higgs 数据集：
+GPU 加速也可以用于其他任务/指标上（回归，多类别分类器，排序，等等）.
+比如，我们可以在一个回归任务下训练 Higgs 数据集:
 
 ::
 
     ./lightgbm config=lightgbm_gpu.conf data=higgs.train objective=regression_l2 metric=l2
 
-同样地，你也可以比较 CPU 上的训练速度：
+同样地, 你也可以比较 CPU 上的训练速度:
 
 ::
 
@@ -176,11 +176,11 @@ GPU 加速也可以用于其他任务/指标上（回归，多类别分类器，
 进一步阅读
 ---------------
 
-- `GPU Tuning Guide and Performance Comparison <./GPU-Performance.rst>`__
+- `GPU 优化指南和性能比较 <./GPU-Performance.rst>`__
 
 - `GPU SDK Correspondence and Device Targeting Table <./GPU-Targets.rst>`__
 
-- `GPU Windows Tutorial <./GPU-Windows.rst>`__
+- `GPU Windows 教程 <./GPU-Windows.rst>`__
 
 参考
 ---------
