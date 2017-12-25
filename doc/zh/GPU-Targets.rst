@@ -1,13 +1,13 @@
-GPU SDK Correspondence and Device Targeting Table
+GPU SDK 相关以及设备对应表
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-GPU Targets Table
+GPU 对应表
 =================
 
-When using OpenCL SDKs, targeting CPU and GPU at the same time is sometimes possible.
-This is especially true for Intel OpenCL SDK and AMD APP SDK.
+当使用 OpenCL SDKs 时, 同时面向 CPU 和 GPU 有时是可能的。
+尤其是对于 Intel OpenCL SDK 和 AMD APP SDK.
 
-You can find below a table of correspondence:
+你可以在下表中找到相关信息：
 
 +---------------------------+-----------------+-----------------+-----------------+--------------+
 | SDK                       | CPU Intel/AMD   | GPU Intel       | GPU AMD         | GPU NVIDIA   |
@@ -19,25 +19,25 @@ You can find below a table of correspondence:
 | `NVIDIA CUDA Toolkit`_    | Untested \*\*   | Untested \*\*   | Untested \*\*   | Supported    |
 +---------------------------+-----------------+-----------------+-----------------+--------------+
 
-Legend:
+说明:
 
--  \* Not usable directly.
--  \*\* Reported as unsupported in public forums.
+-  \* 不能直接使用.
+-  \*\* Reported as unsupported in public forums（表示在公共论坛上不支持）.
 
-AMD GPUs using Intel SDK for OpenCL is not a typo, nor AMD APP SDK compatibility with CPUs.
+AMD GPUs 使用 Intel SDK for OpenCL 并非有误, 是因为 AMD APP SDK 不兼容 CPUs.
 
 --------------
 
-Targeting Table
+对应表
 ===============
 
-We present the following scenarii:
+我们展示了如下情境：
 
 -  CPU, no GPU
--  Single CPU and GPU (even with integrated graphics)
--  Multiple CPU/GPU
+-  单 CPU 以及 GPU (甚至包括集成显卡)
+-  多 CPU/GPU
 
-We provide test R code below, but you can use the language of your choice with the examples of your choices:
+我们提供了测试用的 R 语言代码如下，但是你可以使用任意一种语言作为测试用例：
 
 .. code:: r
 
@@ -68,22 +68,21 @@ We provide test R code below, but you can use the language of your choice with t
                        learning_rate = 1,
                        early_stopping_rounds = 10)
 
-Using a bad ``gpu_device_id`` is not critical, as it will fallback to:
+使用不好的 ``gpu_device_id`` 是不谨慎的, 因为它会导致：
 
 -  ``gpu_device_id = 0`` if using ``gpu_platform_id = 0``
 -  ``gpu_device_id = 1`` if using ``gpu_platform_id = 1``
 
-However, using a bad combination of ``gpu_platform_id`` and ``gpu_device_id`` will lead to a **crash** (you will lose your entire session content).
-Beware of it.
+然而，使用不好的 ``gpu_platform_id`` 和 ``gpu_device_id`` 的组合会导致 **冲突** （你可能会丢失整个 session 内容）。
 
-CPU Only Architectures
+CPU Only 架构
 ----------------------
 
-When you have a single device (one CPU), OpenCL usage is straightforward: ``gpu_platform_id = 0``, ``gpu_device_id = 0``
+当你使用单一设备时 (one CPU), OpenCL 的使用很直接： ``gpu_platform_id = 0``, ``gpu_device_id = 0``
 
-This will use the CPU with OpenCL, even though it says it says GPU.
+这将会使用 CPU with OpenCL, even though it says it says GPU（尽管它说这是 GPU）。
 
-Example:
+例如:
 
 .. code:: r
 
@@ -119,21 +118,20 @@ Example:
     [LightGBM] [Info] Trained a tree with leaves=7 and max_depth=5
     [2]:    test's rmse:0
 
-Single CPU and GPU (even with integrated graphics)
+单 CPU 以及 GPU (甚至包括集成显卡)
 --------------------------------------------------
 
-If you have integrated graphics card (Intel HD Graphics) and a dedicated graphics card (AMD, NVIDIA),
-the dedicated graphics card will automatically override the integrated graphics card.
-The workaround is to disable your dedicated graphics card to be able to use your integrated graphics card.
+如果你有一块集成显卡（Intel HD Graphics）和一块独立显卡（AMD, NVIDIA），独立显卡可能会自动覆盖集成显卡。
+解决办法是中断独显从而使用你的集显。
 
-When you have multiple devices (one CPU and one GPU), the order is usually the following:
+当你拥有多个设备时（一个 CPU，一个 GPU），通常按如下顺序：
 
 -  GPU: ``gpu_platform_id = 0``, ``gpu_device_id = 0``,
    sometimes it is usable using ``gpu_platform_id = 1``, ``gpu_device_id = 1`` but at your own risk!
 
 -  CPU: ``gpu_platform_id = 0``, ``gpu_device_id = 1``
 
-Example of GPU (``gpu_platform_id = 0``, ``gpu_device_id = 0``):
+GPU 的例子(``gpu_platform_id = 0``, ``gpu_device_id = 0``):
 
 .. code:: r
 
@@ -168,7 +166,7 @@ Example of GPU (``gpu_platform_id = 0``, ``gpu_device_id = 0``):
     [LightGBM] [Info] Trained a tree with leaves=7 and max_depth=5
     [2]:    test's rmse:0
 
-Example of CPU (``gpu_platform_id = 0``, ``gpu_device_id = 1``):
+CPU 的例子 (``gpu_platform_id = 0``, ``gpu_device_id = 1``):
 
 .. code:: r
 
@@ -204,7 +202,7 @@ Example of CPU (``gpu_platform_id = 0``, ``gpu_device_id = 1``):
     [LightGBM] [Info] Trained a tree with leaves=7 and max_depth=5
     [2]:    test's rmse:0
 
-When using a wrong ``gpu_device_id``, it will automatically fallback to ``gpu_device_id = 0``:
+当错误使用 ``gpu_device_id``, 它会自动设置为 ``gpu_device_id = 0``:
 
 .. code:: r
 
@@ -274,12 +272,12 @@ Do not ever run under the following scenario as it is known to crash even if it 
     This application has requested the Runtime to terminate it in an unusual way.
     Please contact the application's support team for more information.
 
-Multiple CPU and GPU
+多 CPU 和 GPU
 --------------------
 
-If you have multiple devices (multiple CPUs and multiple GPUs),
-you will have to test different ``gpu_device_id`` and different ``gpu_platform_id`` values to find out the values which suits the CPU/GPU you want to use.
-Keep in mind that using the integrated graphics card is not directly possible without disabling every dedicated graphics card.
+如果你有多个设备（多 CPU 和多 GPU），
+你需要测试不同的 ``gpu_device_id`` 和不同的 ``gpu_platform_id`` 值以找出适用于你想使用的 CPU/GPU 的值。
+记住不中断其他独立显卡的话，可能不能直接使用集成显卡。
 
 .. _Intel SDK for OpenCL: https://software.intel.com/en-us/articles/opencl-drivers
 
