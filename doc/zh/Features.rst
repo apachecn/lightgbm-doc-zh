@@ -1,151 +1,83 @@
-Features
-========
-
-This is a short introduction for the features and algorithms used in LightGBM.
-
-This page doesn't contain detailed algorithms, please refer to cited papers or source code if you are interested.
-
-Optimization in Speed and Memory Usage
---------------------------------------
-
 特点
 ====
 
-这篇文档是对LightGBM特点和其中用到的算法的简单介绍
+这篇文档是对LightGBM的特点和其中用到的算法的简短介绍
 
-本页不包含算法的细节，如果你对这些算法感兴趣可以查阅引用的论文或者源代码
+本页不包含详细的算法，如果你对这些算法感兴趣可以查阅引用的论文或者源代码
 
 速度和内存使用的优化
 -------------------
 
-Many boosting tools use pre-sorted based algorithms\ `[1, 2] <#references>`__ (e.g. default algorithm in xgboost) for decision tree learning. It is a simple solution, but not easy to optimize.
-许多增强工具对于决策树的学习利用基于算法\ `[1, 2] <#references>`__ (例如，在xgboost中默认的算法)的预排序，这是一个简单的解决方案，但是不易于最优化。
+许多提升工具对于决策树的学习使用基于 pre-sorted 的算法\ `[1, 2] <#references>`__ (例如，在xgboost中默认的算法) ，这是一个简单的解决方案，但是不易于优化。
 
-LightGBM uses the histogram based algorithms\ `[3, 4, 5] <#references>`__, which bucketing continuous feature(attribute) values into discrete bins, to speed up training procedure and reduce memory usage.
-Following are advantages for histogram based algorithms:
-
-LightGBM 利用基于histogram算法\ `[3, 4, 5] <#references>`__，通过将连续特征（属性）值分段为离散的值来加快训练的速度并减少内存的使用。
+LightGBM 利用基于 histogram 的算法\ `[3, 4, 5] <#references>`__，通过将连续特征（属性）值分段为 discrete bins 来加快训练的速度并减少内存的使用。
 如下的是基于histogram算法的优点：
 
--  **Reduce calculation cost of split gain**
 -  **减少分割增益的计算量**
-   -  Pre-sorted based algorithms need ``O(#data)`` times calculation
+
    -  Pre-sorted算法需要 ``O(#data)`` 次的计算
 
-   -  Histogram based algorithms only need to calculate ``O(#bins)`` times, and ``#bins`` is far smaller than ``#data``
-   -  histogram算法只需要计算 ``O(#bins)`` 次, 而 ``#bins`` 远少于 ``#data`` 
+   -  Histogram算法只需要计算 ``O(#bins)`` 次, 并且 ``#bins`` 远少于 ``#data`` 
 
-      -  It still needs ``O(#data)`` times to construct histogram, which only contain sum-up operation
       -  这个仍然需要 ``O(#data)`` 次来构建直方图, 而这仅仅包含总结操作
 
--  **Use histogram subtraction for further speed-up**
--  **通过对直方图的相减来进行进一步的加速**
+-  **通过直方图的相减来进行进一步的加速**
 
-   -  To get one leaf's histograms in a binary tree, can use the histogram subtraction of its parent and its neighbor
    -  在二叉树中可以通过利用叶节点的父节点和相邻节点的直方图的相减来获得该叶节点的直方图
 
-   -  So it only need to construct histograms for one leaf (with smaller ``#data`` than its neighbor), then can get histograms of its neighbor by histogram subtraction with small cost(``O(#bins)``)
-   -  所以仅仅需要为一个叶节点建立直方图 (用与其相邻节点少的多的 ``#data`` )就可以通过直方图的相减，花费很小的代价(``O(#bins)``)，来获得相邻节点的直方图
-
--  **Reduce memory usage**
+   -  所以仅仅需要为一个叶节点建立直方图 (其 ``#data`` 小于它的相邻节点)就可以通过直方图的相减来获得相邻节点的直方图，而这花费的代价(``O(#bins)``)很小。
 -  **减少内存的使用**
 
-   -  Can replace continuous values to discrete bins. If ``#bins`` is small, can use small data type, e.g. uint8\_t, to store training data
-   -  可以将连续的值替换为 discrete bins。 如果 ``#bins`` 较小, 可以利用较小的数据类型, 如 uint8\_t, 来存储训练数据。
+   -  可以将连续的值替换为 discrete bins。 如果 ``#bins`` 较小, 可以利用较小的数据类型来存储训练数据, 如 uint8\_t。
 
-   -  No need to store additional information for pre-sorting feature values
    -  无需为 pre-sorting 特征值存储额外的信息
 
--  **Reduce communication cost for parallel learning**
 -  **减少并行学习的通信代价**
-
-Sparse Optimization
--------------------
 
 稀疏优化
 --------
 
--  Only need ``O(2 * #non_zero_data)`` to construct histogram for sparse features
 -  对于稀疏的特征仅仅需要 ``O(2 * #non_zero_data)`` 来建立直方图
 
-Optimization in Accuracy
-------------------------
 准确率的优化
 -----------
 
-Leaf-wise (Best-first) Tree Growth
+Leaf-wise (Best-first) 的决策树生长策略
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Leaf-wise (Best-first) Tree Growth
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Most decision tree learning algorithms grow tree by level(depth)-wise, like the following image:
-大部分决策树的学习算法通过 level(depth)-wise 策略增长树，就像如下的图像一样：
+大部分决策树的学习算法通过 level(depth)-wise 策略生长树，如下图一样：
 
 .. image:: ./_static/images/level-wise.png
    :align: center
 
-LightGBM grows tree by leaf-wise (best-first)\ `[6] <#references>`__. It will choose the leaf with max delta loss to grow.
-LightGBM 通过 leaf-wise (best-first)\ `[6] <#references>`__策略来增长树。它将选取具有最大 delta loss 的叶节点来分裂。
+LightGBM 通过 leaf-wise (best-first)\ `[6] <#references>`__策略来生长树。它将选取具有最大 delta loss 的叶节点来生长。
+当生长相同的 ``#leaf``，leaf-wise 算法可以比level-wise算法减少更多的损失。
 
-When growing same ``#leaf``, leaf-wise algorithm can reduce more loss than level-wise algorithm.
-当增长相同的 ``#leaf``， 相较于 level-wise 算法，leaf-wise 算法可以减少更多的损失。
-
-Leaf-wise may cause over-fitting when ``#data`` is small.
 当 ``#data`` 较小的时候，leaf-wise 可能会造成过拟合。
-
-So, LightGBM can use an additional parameter ``max_depth`` to limit depth of tree and avoid over-fitting (tree still grows by leaf-wise).
 所以，LightGBM 可以利用额外的参数 ``max_depth`` 来限制树的深度并避免过拟合（树的生长仍然通过 leaf-wise 策略）。
 
 .. image:: ./_static/images/leaf-wise.png
    :align: center
 
-Optimal Split for Categorical Features
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 类别特征值的最优分割
 ~~~~~~~~~~~~~~~~~~~
 
-We often convert the categorical features into one-hot coding.
 我们通常将类别特征转化为 one-hot coding。
-However, it is not a good solution in tree learner.
 然而，对于学习树来说这不是个好的解决方案。
-The reason is, for the high cardinality categorical features, it will grow the very unbalance tree, and needs to grow very deep to achieve the good accuracy.
-原因是，对于一个基数较大的类别特征，学习树会变的非常不平衡，并且需要非常深的深度才能来达到较好的准确率。
+原因是，对于一个基数较大的类别特征，学习树会生长的非常不平衡，并且需要非常深的深度才能来达到较好的准确率。
 
-Actually, the optimal solution is partitioning the categorical feature into 2 subsets, and there are ``2^(k-1) - 1`` possible partitions.
-其实，最好的解决方案是将类别特征划分为两个子集，总共有 ``2^(k-1) - 1`` 中可能的划分
-But there is a efficient solution for regression tree\ `[7] <#references>`__. It needs about ``k * log(k)`` to find the optimal partition.
+事实上，最好的解决方案是将类别特征划分为两个子集，总共有 ``2^(k-1) - 1`` 种可能的划分
 但是对于回归树\ `[7] <#references>`__有个有效的解决方案。为了寻找最优的划分需要大约 ``k * log(k)`` 。
-The basic idea is reordering the categories according to the relevance of training target.
+
 基本的思想是根据训练目标的相关性对类别进行重排序。
-More specifically, reordering the histogram (of categorical feature) according to it's accumulate values (``sum_gradient / sum_hessian``), then find the best split on the sorted histogram.
-更具体的说，根据累加值(``sum_gradient / sum_hessian``)重新对直方图（类别特征）进行排序，然后在排好序的直方图中寻找最好的分割点。
+更具体的说，根据累加值(``sum_gradient / sum_hessian``)重新对（类别特征的）直方图进行排序，然后在排好序的直方图中寻找最好的分割点。
 
-
-Optimization in Network Communication
--------------------------------------
 网络通信的优化
 -------------
 
-
-It only needs to use some collective communication algorithms, like "All reduce", "All gather" and "Reduce scatter", in parallel learning of LightGBM.
-在 LightGBM 中的并行学习，仅仅需要使用一些聚合通信算法，例如"All reduce", "All gather" 和 "Reduce scatter"
-LightGBM implement state-of-art algorithms\ `[8] <#references>`__.
-LightGBM实现了 state-of-art 算法\ `[8] <#references>`__。
-These collective communication algorithms can provide much better performance than point-to-point communication.
+LightGBM 中的并行学习，仅仅需要使用一些聚合通信算法，例如"All reduce", "All gather" 和 "Reduce scatter"。
+LightGBM 实现了 state-of-art 算法\ `[8] <#references>`__。
 这些聚合通信算法可以提供比点对点通信更好的性能。
-
-
-
-
-
-
-
-
-
-
-
 
 Optimization in Parallel Learning
 ---------------------------------
