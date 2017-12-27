@@ -1,39 +1,39 @@
-Installation Guide
+安装指南
 ==================
 
-Here is the guide for the build of CLI version.
+该页面是 LightGBM CLI 版本的构建指南.
 
-For the build of Python-package and R-package, please refer to `Python-package`_ and `R-package`_ folders respectively.
+要构建 Python 和 R 的软件包, 请分别参阅 `Python-package`_ 和 `R-package`_ 文件夹.
 
 Windows
 ~~~~~~~
 
-LightGBM can use Visual Studio, MSBuild with CMake or MinGW to build in Windows.
+LightGBM 可以使用 Visual Studio, MSBuild 与 CMake 或 MinGW 来在  Windows 上构建.
 
 Visual Studio (or MSBuild)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-With GUI
+使用 GUI
 ********
 
-1. Install `Visual Studio`_ (2015 or newer).
+1. 安装 `Visual Studio`_ (2015 或更新版本).
 
-2. Download `zip archive`_ and unzip it.
+2. 下载 `zip archive`_ 并且 unzip（解压）它.
 
-3. Go to ``LightGBM-master/windows`` folder.
+3. 定位到 ``LightGBM-master/windows`` 文件夹.
 
-4. Open ``LightGBM.sln`` file with Visual Studio, choose ``Release`` configuration and click ``BUILD``->\ ``Build Solution (Ctrl+Shift+B)``.
+4. 使用 Visual Studio 打开 ``LightGBM.sln`` 文件, 选择 ``Release`` 配置并且点击 ``BUILD``->\ ``Build Solution (Ctrl+Shift+B)``.
 
-   If you have errors about **Platform Toolset**, go to ``PROJECT``->\ ``Properties``->\ ``Configuration Properties``->\ ``General`` and select the toolset installed on your machine.
+   如果出现有关 **Platform Toolset** 的错误, 定位到 ``PROJECT``->\ ``Properties``->\ ``Configuration Properties``->\ ``General`` 然后选择 toolset 安装到你的机器.
 
-The exe file will be in ``LightGBM-master/windows/x64/Release`` folder.
+该 exe 文件可以在 ``LightGBM-master/windows/x64/Release`` 文件夹中找到.
 
-From Command Line
+使用命令行
 *****************
 
-1. Install `Git for Windows`_, `CMake`_ (3.8 or higher) and `MSBuild`_ (**MSBuild** is not needed if **Visual Studio** (2015 or newer) is installed).
+1. 安装 `Git for Windows`_, `CMake`_ (3.8 或更新版本) 以及 `MSBuild`_ (**MSBuild** 是非必要的, 如果已安装 **Visual Studio** (2015 或更新版本) 的话).
 
-2. Run the following commands:
+2. 运行以下命令:
 
    .. code::
 
@@ -44,14 +44,14 @@ From Command Line
      cmake -DCMAKE_GENERATOR_PLATFORM=x64 ..
      cmake --build . --target ALL_BUILD --config Release
 
-The exe and dll files will be in ``LightGBM/Release`` folder.
+这些 exe 和 dll 文件可以在 ``LightGBM/Release`` 文件夹中找到.
 
 MinGW64
 ^^^^^^^
 
-1. Install `Git for Windows`_, `CMake`_ and `MinGW-w64`_.
+1. 安装 `Git for Windows`_, `CMake`_ 和 `MinGW-w64`_.
 
-2. Run the following commands:
+2. 运行以下命令:
 
    .. code::
 
@@ -62,16 +62,16 @@ MinGW64
      cmake -G "MinGW Makefiles" ..
      mingw32-make.exe -j4
 
-The exe and dll files will be in ``LightGBM/`` folder.
+这些 exe 和 dll 文件可以在 ``LightGBM/`` 文件夹中找到.
 
-**Note**: you may need to run the ``cmake -G "MinGW Makefiles" ..`` one more time if met ``sh.exe was found in your PATH`` error.
+**注意**: 也许你需要再一次运行 ``cmake -G "MinGW Makefiles" ..`` 命令, 如果遇到 ``sh.exe was found in your PATH`` 错误的话.
 
-Also you may want to reed `gcc Tips <./gcc-Tips.rst>`__.
+也许你还想要参阅 `gcc 建议 <./gcc-Tips.rst>`__.
 
 Linux
 ~~~~~
 
-LightGBM uses **CMake** to build. Run the following commands:
+LightGBM 使用 **CMake** 来构建. 运行以下命令:
 
 .. code::
 
@@ -80,23 +80,23 @@ LightGBM uses **CMake** to build. Run the following commands:
   cmake ..
   make -j4
 
-**Note**: glibc >= 2.14 is required.
+**注意**: glibc >= 2.14 是必须的.
 
-Also you may want to reed `gcc Tips <./gcc-Tips.rst>`__.
+也许你还想要参阅 `gcc 建议 <./gcc-Tips.rst>`__.
 
 OSX
 ~~~
 
-LightGBM depends on **OpenMP** for compiling, which isn't supported by Apple Clang.
+LightGBM 依赖于 **OpenMP** 进行编译, 然而 Apple Clang 不支持它.
 
-Please install **gcc/g++** by using the following commands:
+请使用以下命令来安装 **gcc/g++** :
 
 .. code::
 
   brew install cmake
   brew install gcc --without-multilib
 
-Then install LightGBM:
+然后安装 LightGBM:
 
 .. code::
 
@@ -106,49 +106,50 @@ Then install LightGBM:
   cmake ..
   make -j4
 
-Also you may want to reed `gcc Tips <./gcc-Tips.rst>`__.
+也许你还想要参阅 `gcc 建议 <./gcc-Tips.rst>`__.
 
 Docker
 ~~~~~~
 
-Refer to `Docker folder <https://github.com/Microsoft/LightGBM/tree/master/docker>`__.
+请参阅 `Docker 文件夹 <https://github.com/Microsoft/LightGBM/tree/master/docker>`__.
 
-Build MPI Version
+Build MPI 版本
 ~~~~~~~~~~~~~~~~~
 
-The default build version of LightGBM is based on socket. LightGBM also supports `MPI`_.
-MPI is a high performance communication approach with `RDMA`_ support.
+LightGBM 默认的构建版本是基于 socket 的的.
+LightGBM 也支持 `MPI`_.
+MPI 是一种与 `RDMA`_ 支持的高性能通信方法.
 
-If you need to run a parallel learning application with high performance communication, you can build the LightGBM with MPI support.
+如果您需要运行具有高性能通信的并行学习应用程序, 则可以构建带有 MPI 支持的 LightGBM.
 
 Windows
 ^^^^^^^
 
-With GUI
+使用 GUI
 ********
 
-1. You need to install `MS MPI`_ first. Both ``msmpisdk.msi`` and ``MSMpiSetup.exe`` are needed.
+1. 需要先安装 `MS MPI`_ . 需要 ``msmpisdk.msi`` 和 ``MSMpiSetup.exe``.
 
-2. Install `Visual Studio`_ (2015 or newer).
+2. 安装 `Visual Studio`_ (2015 或更新版本).
 
-3. Download `zip archive`_ and unzip it.
+3. 下载 `zip archive`_ 并且 unzip（解压）它.
 
-4. Go to ``LightGBM-master/windows`` folder.
+4. 定位到 ``LightGBM-master/windows`` 文件夹.
 
-5. Open ``LightGBM.sln`` file with Visual Studio, choose ``Release_mpi`` configuration and click ``BUILD``->\ ``Build Solution (Ctrl+Shift+B)``.
+5. 使用 Visual Studio 打开 ``LightGBM.sln`` 文件, 选择 ``Release_mpi`` 配置并且点击 ``BUILD``->\ ``Build Solution (Ctrl+Shift+B)``.
 
-   If you have errors about **Platform Toolset**, go to ``PROJECT``->\ ``Properties``->\ ``Configuration Properties``->\ ``General`` and select the toolset installed on your machine.
+   如果遇到有关 **Platform Toolset** 的错误, 定位到 ``PROJECT``->\ ``Properties``->\ ``Configuration Properties``->\ ``General`` 并且选择安装 toolset 到你的机器上.
 
-The exe file will be in ``LightGBM-master/windows/x64/Release_mpi`` folder.
+该 exe 文件可以在 ``LightGBM-master/windows/x64/Release_mpi`` 文件夹中找到.
 
-From Command Line
+使用命令行
 *****************
 
-1. You need to install `MS MPI`_ first. Both ``msmpisdk.msi`` and ``MSMpiSetup.exe`` are needed.
+1. 需要先安装 `MS MPI`_ . 需要 ``msmpisdk.msi`` 和 ``MSMpiSetup.exe``.
 
-2. Install `Git for Windows`_, `CMake`_ (3.8 or higher) and `MSBuild`_ (MSBuild is not needed if **Visual Studio** (2015 or newer) is installed).
+2. 安装 `Git for Windows`_, `CMake`_ (3.8 或更新版本) 和 `MSBuild`_ (MSBuild 是非必要的, 如果已安装 **Visual Studio** (2015 或更新版本)).
 
-3. Run the following commands:
+3. 运行以下命令:
 
    .. code::
 
@@ -159,16 +160,16 @@ From Command Line
      cmake -DCMAKE_GENERATOR_PLATFORM=x64 -DUSE_MPI=ON ..
      cmake --build . --target ALL_BUILD --config Release
 
-The exe and dll files will be in ``LightGBM/Release`` folder.
+这些 exe 和 dll 文件可以在 ``LightGBM/Release`` 文件夹中找到.
 
-**Note**: Build MPI version by **MinGW** is not supported due to the miss of MPI library in it.
+**注意**: Build MPI version 通过 **MinGW** 来构建 MPI 版本的不支持的, 由于它里面缺失了 MPI 库.
 
 Linux
 ^^^^^
 
-You need to install `Open MPI`_ first.
+需要先安装 `Open MPI`_ .
 
-Then run the following commands:
+然后运行以下命令:
 
 .. code::
 
@@ -177,12 +178,12 @@ Then run the following commands:
   cmake -DUSE_MPI=ON ..
   make -j4
 
-**Note**: glibc >= 2.14 is required.
+**Note**: glibc >= 2.14 是必要的.
 
 OSX
 ^^^
 
-Install **gcc** and **Open MPI** first:
+先安装 **gcc** 和 **Open MPI** :
 
 .. code::
 
@@ -190,7 +191,7 @@ Install **gcc** and **Open MPI** first:
   brew install cmake
   brew install gcc --without-multilib
 
-Then run the following commands:
+然后运行以下命令:
 
 .. code::
 
@@ -200,27 +201,27 @@ Then run the following commands:
   cmake -DUSE_MPI=ON ..
   make -j4
 
-Build GPU Version
+Build GPU 版本
 ~~~~~~~~~~~~~~~~~
 
 Linux
 ^^^^^
 
-The following dependencies should be installed before compilation:
+在编译前应该先安装以下依赖:
 
--  OpenCL 1.2 headers and libraries, which is usually provided by GPU manufacture.
+-  OpenCL 1.2 headers and libraries, 它们通常由 GPU 制造商提供.
 
    The generic OpenCL ICD packages (for example, Debian package ``cl-icd-libopencl1`` and ``cl-icd-opencl-dev``) can also be used.
 
--  libboost 1.56 or later (1.61 or later recommended).
+-  libboost 1.56 或更新版本 (1.61 或最新推荐的版本).
 
    We use Boost.Compute as the interface to GPU, which is part of the Boost library since version 1.61. However, since we include the source code of Boost.Compute as a submodule, we only require the host has Boost 1.56 or later installed. We also use Boost.Align for memory allocation. Boost.Compute requires Boost.System and Boost.Filesystem to store offline kernel cache.
 
    The following Debian packages should provide necessary Boost libraries: ``libboost-dev``, ``libboost-system-dev``, ``libboost-filesystem-dev``.
 
--  CMake 3.2 or later.
+-  CMake 3.2 或更新版本.
 
-To build LightGBM GPU version, run the following commands:
+要构建 LightGBM GPU 版本, 运行以下命令:
 
 .. code::
 
@@ -234,29 +235,29 @@ To build LightGBM GPU version, run the following commands:
 Windows
 ^^^^^^^
 
-If you use **MinGW**, the build procedure are similar to the build in Linux. Refer to `GPU Windows Compilation <./GPU-Windows.rst>`__ to get more details.
+如果使用 **MinGW**, 该构建过程类似于 Linux 上的构建. 相关的更多细节请参阅 `GPU Windows 平台上的编译 <./GPU-Windows.rst>`__ .
 
-Following procedure is for the MSVC (Microsoft Visual C++) build.
+以下构建过程适用于 MSVC (Microsoft Visual C++) 构建.
 
-1. Install `Git for Windows`_, `CMake`_ (3.8 or higher) and `MSBuild`_ (MSBuild is not needed if **Visual Studio** (2015 or newer) is installed).
+1. 安装 `Git for Windows`_, `CMake`_ (3.8 or higher) 和 `MSBuild`_ (MSBuild 是非必要的, 如果已安装 **Visual Studio** (2015 或更新版本)).
 
-2. Install **OpenCL** for Windows. The installation depends on the brand (NVIDIA, AMD, Intel) of your GPU card.
+2. 针对 Windows 平台安装 **OpenCL** . 安装取决于你的 GPU 显卡品牌 (NVIDIA, AMD, Intel).
 
-   - For running on Intel, get `Intel SDK for OpenCL`_.
+   - 要运行在 Intel 上, 获取 `Intel SDK for OpenCL`_.
 
-   - For running on AMD, get `AMD APP SDK`_.
+   - 要运行在 AMD 上, 获取 `AMD APP SDK`_.
 
-   - For running on NVIDIA, get `CUDA Toolkit`_.
+   - 要运行在 NVIDIA 上, 获取 `CUDA Toolkit`_.
 
-3. Install `Boost Binary`_.
+3. 安装 `Boost Binary`_.
 
-   **Note**: match your Visual C++ version:
+   **注意**: 要匹配你的 Visual C++ 版本:
    
    Visual Studio 2015 -> ``msvc-14.0-64.exe``,
 
    Visual Studio 2017 -> ``msvc-14.1-64.exe``.
 
-4. Run the following commands:
+4. 运行以下命令:
 
    .. code::
 
@@ -269,27 +270,26 @@ Following procedure is for the MSVC (Microsoft Visual C++) build.
      cmake -DCMAKE_GENERATOR_PLATFORM=x64 -DUSE_GPU=1 ..
      cmake --build . --target ALL_BUILD --config Release
 
-   **Note**: ``C:\local\boost_1_64_0\`` and ``C:\local\boost_1_64_0\lib64-msvc-14.0`` are locations of your Boost binaries. You also can set them to the environment variable to avoid ``Set ...`` commands when build.
+   **注意**: ``C:\local\boost_1_64_0\`` 和 ``C:\local\boost_1_64_0\lib64-msvc-14.0`` 是你 Boost 二进制文件的位置. 你还可以将它们设置为环境变量, 以在构建时避免 ``Set ...`` 命令.
 
-Protobuf Support
+Protobuf 支持
 ^^^^^^^^^^^^^^^^
 
-If you want to use protobuf to save and load models, install `protobuf c++ version <https://github.com/google/protobuf/blob/master/src/README.md>`__ first.
-
-Then run cmake with USE_PROTO on, for example:
+如果想要使用 protobuf 来保存和加载模型, 请先安装 `protobuf c++ version <https://github.com/google/protobuf/blob/master/src/README.md>`__ .
+然后使用 USE_PROTO=ON 配置来运行 cmake 命令, 例如:
 
 .. code::
 
   cmake -DUSE_PROTO=ON ..
 
-You can then use ``model_format=proto`` in parameters when save and load models.
+然后在保存或加载模型时, 可以在参数中使用 ``model_format=proto``.
 
-**Note**: for windows user, it's only tested with mingw. 
+**注意**: 针对 windows 用户, 它只对 mingw 进行了测试. 
 
 Docker
 ^^^^^^
 
-Refer to `GPU Docker folder <https://github.com/Microsoft/LightGBM/tree/master/docker/gpu>`__.
+请参阅 `GPU Docker 文件夹 <https://github.com/Microsoft/LightGBM/tree/master/docker/gpu>`__.
 
 .. _Python-package: https://github.com/Microsoft/LightGBM/tree/master/python-package
 
