@@ -8,9 +8,9 @@ LightGBM 常见问题解答
 
 -  `LightGBM <#lightgbm>`__
 
--  `R包 <#R包>`__
+-  `R包 <#r包>`__
 
--  `Python包 <#Python包>`__
+-  `Python包 <#python包>`__
 
 --------------
 
@@ -53,7 +53,7 @@ LightGBM
 
 -  **问题 1**：我可以去哪里找到关于LightBGM参数的更多详细内容？
 
--  **方法 1**：可以看一下这个 `Parameters <./Parameters.rst>`__ and `Laurae++/Parameters <https://sites.google.com/view/lauraepp/parameters>`__网站。
+-  **方法 1**：可以看一下这个 `Parameters <./Parameters.rst>`__ and `Laurae++/Parameters <https://sites.google.com/view/lauraepp/parameters>`__ 网站。
 --------------
 
 -  **问题 2**：在一个有百万个特征的数据集中，（要在很长一段时间后才开始训练或者）训练根本没有开始。
@@ -64,7 +64,7 @@ LightGBM
 -  **问题 3**：当在一个很大的数据集上使用LightBGM，我的电脑会耗尽内存。
 
 -  **方法 3**：很多方法啊：将 ``histogram_pool_size`` 参数设置成你想为LightGBM分配的MB(histogram\_pool\_size + dataset size = approximately RAM used),
-   减少 ``num_leaves`` 或减少 ``max_bin``（点这里 `Microsoft/LightGBM#562 <https://github.com/Microsoft/LightGBM/issues/562>`__）。
+   减少 ``num_leaves`` 或减少 ``max_bin`` （点这里 `Microsoft/LightGBM#562 <https://github.com/Microsoft/LightGBM/issues/562>`__）。
 --------------
 
 -  **问题 4**：我使用Windows系统。我应该使用Visual Studio或者MinGW编译LightBGM吗？
@@ -85,7 +85,7 @@ LightGBM
    There is `no workaround currently <https://github.com/Microsoft/LightGBM/issues/632>`__。
 --------------
 
--  **问题 7**：我试过使用随机森林模式，LightBGM奔溃啦！
+-  **问题 7**：我试过使用随机森林模式，LightBGM崩溃啦！
 
 -  **方法 7**：这是设计的问题。
    你必须使用 ``bagging_fraction`` 和 ``feature_fraction`` 与1不同，要和 ``bagging_freq`` 结合使用。
@@ -108,7 +108,7 @@ R包
    这是一个已知的问题: `Microsoft/LightGBM#698 <https://github.com/Microsoft/LightGBM/issues/698>`__。
 --------------
 
--  **问题 2**：我使用过``setinfo``,试过打印我的``lgb.Dataset``,结果R控制台无响应。
+-  **问题 2**：我使用过 ``setinfo`` ,试过打印我的 ``lgb.Dataset`` ,结果R控制台无响应。
 
 -  **方法 2**：在使用 ``setinfo`` 后避免打印 ``lgb.Dataset``.
    这是一个已知的bug：`Microsoft/LightGBM#539 <https://github.com/Microsoft/LightGBM/issues/539>`__。
