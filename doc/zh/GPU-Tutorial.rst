@@ -66,7 +66,7 @@ GPU 安装
     make -j$(nproc)
     cd ..
 
-你可以看到有两个二进制文件生成了，``lightgbm`` 和 ``lib_lightgbm.so``
+你可以看到有两个二进制文件生成了，``lightgbm`` 和 ``lib_lightgbm.so`` 
 
 如果你正在 OSX 系统上编译，你可能需要在 ``src/treelearner/gpu_tree_learner.h`` 中移除 ``BOOST_COMPUTE_USE_OFFLINE_CACHE`` 宏指令以避免 Boost.Compute 中的冲突错误。
 
