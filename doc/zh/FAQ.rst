@@ -133,11 +133,13 @@ Python包
 -  **问题 2**：我看到错误信息如下
 
    ::
+
        在构建数据集前不能 get/set label/weight/init_score/group/num_data/num_feature。
 
    但是我已经使用下面的代码构建数据集
 
    ::
+   
        train = lightgbm.Dataset(X_train, y_train)
        
    或如下错误信息
