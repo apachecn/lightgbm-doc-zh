@@ -298,285 +298,284 @@
 
    -  将它设置为更大的值可以获得更精确的结果，但会减慢训练速度
 
-IO Parameters
+IO 参数
 -------------
+-  ``max_bin``, 默认值=\ ``255``, 类型=int
 
--  ``max_bin``, default=\ ``255``, type=int
+   -  工具箱的最大数特征值决定了容量
+      工具箱的最小数特征值可能会降低训练的准确性，但是可能会增加一些一般的影响（处理过度学习）
 
-   -  max number of bins that feature values will be bucketed in.
-      Small number of bins may reduce training accuracy but may increase general power (deal with over-fitting)
+   -  LightGBM将根据``max_bin``自动压缩内存。
+      例如，如果maxbin=255，那么LightGBM将使用uint8t的特性值
 
-   -  LightGBM will auto compress memory according ``max_bin``.
-      For example, LightGBM will use ``uint8_t`` for feature value if ``max_bin=255``
+-  ``max_bin``, 默认值=\ ``255``, 类型=int
 
--  ``min_data_in_bin``, default=\ ``3``, type=int
+-  ``min_data_in_bin``, 默认值=\ ``3``, 类型=int
+   -  单个数据箱的最小数，使用此方法避免one-data-one-bin（可能会过度学习）
 
-   -  min number of data inside one bin, use this to avoid one-data-one-bin (may over-fitting)
+-  ``data_r和om_seed``, 默认值=\ ``1``, 类型=int
 
--  ``data_random_seed``, default=\ ``1``, type=int
+   -  并行学习数据分隔中的随机种子 (不包括并行功能)
 
-   -  random seed for data partition in parallel learning (not include feature parallel)
+-  ``output_model``, 默认值=\ ``LightGBM_model.txt``, 类型=string, 别名=\ ``model_output``, ``model_out``
 
--  ``output_model``, default=\ ``LightGBM_model.txt``, type=string, alias=\ ``model_output``, ``model_out``
+   -  培训中输出的模型文件名
 
-   -  file name of output model in training
+-  ``input_model``, 默认值=\ ``""``, 类型=string, 别名=\ ``model_input``, ``model_in``
 
--  ``input_model``, default=\ ``""``, type=string, alias=\ ``model_input``, ``model_in``
+   -  输入模型的文件名
 
-   -  file name of input model
+   -  对于``prediction`` 任务, 该模型将用于预测数据
 
-   -  for ``prediction`` task, this model will be used for prediction data
+   -  对于 ``train`` 任务, 培训将从该模型继续
 
-   -  for ``train`` task, training will be continued from this model
+-  ``output_result``, 默认值=\ ``LightGBM_predict_result.txt``,
+   类型=string, 别名=\ ``predict_result``, ``prediction_result``
 
--  ``output_result``, default=\ ``LightGBM_predict_result.txt``,
-   type=string, alias=\ ``predict_result``, ``prediction_result``
+   -  ``prediction`` 任务的预测结果文件名
 
-   -  file name of prediction result in ``prediction`` task
+-  ``model_format``, 默认值=\ ``text``, 类型=multi-enum, 可选项=\ ``text``, ``proto``
 
--  ``model_format``, default=\ ``text``, type=multi-enum, options=\ ``text``, ``proto``
+   -  保存和加载模型的格式
 
-   -  format to save and load model
+   -   ``text``, 使用文本字符串
 
-   -  if ``text``, text string will be used
+   -   ``proto``, 使用协议缓冲二进制格式
 
-   -  if ``proto``, Protocol Buffer binary format will be used
+   -  您可以通过使用逗号来进行多种格式的保存，例如 ``text,proto``. 在这种情况下, ``model_format`` 将作为后缀添加 ``output_model``
 
-   -  you can save in multiple formats by joining them with comma, like ``text,proto``. In this case, ``model_format`` will be add as suffix after ``output_model``
+   -  **Note**: 不支持多种格式的加载
 
-   -  **Note**: loading with multiple formats is not supported
+   -  **Note**: 要使用这个参数，您需要使用build 版本 <./Installation-Guide.rst#protobuf-support>`__
 
-   -  **Note**: to use this parameter you need to `build version with Protobuf Support <./Installation-Guide.rst#protobuf-support>`__
+-  ``pre_partition``, 默认值=\ ``false``, 类型=bool, 别名=\ ``is_pre_partition``
 
--  ``pre_partition``, default=\ ``false``, type=bool, alias=\ ``is_pre_partition``
+   -  用于并行学习(不包括功能并行)
 
-   -  used for parallel learning (not include feature parallel)
+   -  ``true`` 如果训练数据 pre-partitioned, 不同的机器使用不同的分区
 
-   -  ``true`` if training data are pre-partitioned, and different machines use different partitions
+-  ``is_sparse``, 默认值=\ ``true``, 类型=bool, 别名=\ ``is_enable_sparse``, ``enable_sparse``
 
--  ``is_sparse``, default=\ ``true``, type=bool, alias=\ ``is_enable_sparse``, ``enable_sparse``
+   -  用于 enable/disable 稀疏优化. 设置 ``false``就禁用稀疏优化
 
-   -  used to enable/disable sparse optimization. Set to ``false`` to disable sparse optimization
+-  ``two_round``, 默认值=\ ``false``, 类型=bool, 别名=\ ``two_round_loading``, ``use_two_round_loading``
 
--  ``two_round``, default=\ ``false``, type=bool, alias=\ ``two_round_loading``, ``use_two_round_loading``
+   -  默认情况下，LightGBM将把数据文件映射到内存，并从内存加载特性。
+      这将提供更快的数据加载速度。但当数据文件很大时，内存可能会耗尽
+   -  如果数据文件太大，不能放在内存中，就把它设置为``true``
 
-   -  by default, LightGBM will map data file to memory and load features from memory.
-      This will provide faster data loading speed. But it may run out of memory when the data file is very big
+-  ``save_binary``, 默认值=\ ``false``, 类型=bool, 别名=\ ``is_save_binary``, ``is_save_binary_file``
 
-   -  set this to ``true`` if data file is too big to fit in memory
+   -  如果设置为 ``true`` LightGBM则将数据集(包括验证数据)保存到二进制文件中。
+      可以加快数据加载速度。
 
--  ``save_binary``, default=\ ``false``, type=bool, alias=\ ``is_save_binary``, ``is_save_binary_file``
+-  ``verbosity``, 默认值=\ ``1``, 类型=int, 别名=\ ``verbose``
 
-   -  if ``true`` LightGBM will save the dataset (include validation data) to a binary file.
-      Speed up the data loading for the next time
+   -  ``<0`` = 致命的,
+      ``=0`` = 错误 (警告),
+      ``>0`` = 信息
 
--  ``verbosity``, default=\ ``1``, type=int, alias=\ ``verbose``
+-  ``header``, 默认值=\ ``false``, 类型=bool, 别名=\ ``has_header``
 
-   -  ``<0`` = Fatal,
-      ``=0`` = Error (Warn),
-      ``>0`` = Info
+   -  如果输入数据有标识头，则在此处设置``true``
 
--  ``header``, default=\ ``false``, type=bool, alias=\ ``has_header``
+-  ``label``, 默认值=\ ``""``, 类型=string, 别名=\ ``label_column``
 
-   -  set this to ``true`` if input data has header
+   -  指定标签列
 
--  ``label``, default=\ ``""``, type=string, alias=\ ``label_column``
+   -  用于索引的数字, e.g. ``label=0`` 意味着 column\_0 是标签列
 
-   -  specify the label column
+   -  为列名添加前缀 ``name:`` , e.g. ``label=name:is_click``
 
-   -  use number for index, e.g. ``label=0`` means column\_0 is the label
+-  ``weight``, 默认值=\ ``""``, 类型=string, 别名=\ ``weight_column``
 
-   -  add a prefix ``name:`` for column name, e.g. ``label=name:is_click``
+   -  列的指定
 
--  ``weight``, default=\ ``""``, type=string, alias=\ ``weight_column``
+   -  用于索引的数字, e.g. ``weight=0`` 表示 column\_0 是权重点
 
-   -  specify the weight column
+   -  为列名添加前缀 ``name:``, e.g. ``weight=name:weight``
 
-   -  use number for index, e.g. ``weight=0`` means column\_0 is the weight
+   -  **Note**: 索引从 ``0`` 开始.
+      当传递类型为索引时，它不计算标签列，例如当标签为0时，权重为列1，正确的参数是权重值为0
 
-   -  add a prefix ``name:`` for column name, e.g. ``weight=name:weight``
+-  ``query``, 默认值=\ ``""``, 类型=string, 别名=\ ``query_column``, ``group``, ``group_column``
 
-   -  **Note**: index starts from ``0``.
-      And it doesn't count the label column when passing type is Index, e.g. when label is column\_0, and weight is column\_1, the correct parameter is ``weight=0``
+   -  指定 query/group ID列
 
--  ``query``, default=\ ``""``, type=string, alias=\ ``query_column``, ``group``, ``group_column``
+   -  用数字做索引, e.g. ``query=0`` 意味着 column\_0 是这个查询的Id
 
-   -  specify the query/group id column
+   -  为列名添加前缀 ``name:`` , e.g. ``query=name:query_id``
 
-   -  use number for index, e.g. ``query=0`` means column\_0 is the query id
+   -  **Note**: 数据应按照 query\_id.
+      索引从 ``0``开始.
+      当传递类型为索引时，它不计算标签列，例如当标签为列0，查询id为列1时，正确的参数是查询=0
 
-   -  add a prefix ``name:`` for column name, e.g. ``query=name:query_id``
+-  ``ignore_column``, 默认值=\ ``""``, 类型=string, 别名=\ ``ignore_feature``, ``blacklist``
 
-   -  **Note**: data should be grouped by query\_id.
-      Index starts from ``0``.
-      And it doesn't count the label column when passing type is Index, e.g. when label is column\_0 and query\_id is column\_1, the correct parameter is ``query=0``
+   -  在培训中指定一些忽略的列
 
--  ``ignore_column``, default=\ ``""``, type=string, alias=\ ``ignore_feature``, ``blacklist``
+   -  用数字做索引, e.g. ``ignore_column=0,1,2`` 意味着 column\_0, column\_1 和 column\_2 将被忽略
 
-   -  specify some ignoring columns in training
+   -  为列名添加前缀 ``name:`` , e.g. ``ignore_column=name:c1,c2,c3`` 意味着 c1, c2 和 c3 将被忽略
 
-   -  use number for index, e.g. ``ignore_column=0,1,2`` means column\_0, column\_1 and column\_2 will be ignored
+   -  **Note**: 只在从文件直接加载数据的情况下工作
 
-   -  add a prefix ``name:`` for column name, e.g. ``ignore_column=name:c1,c2,c3`` means c1, c2 and c3 will be ignored
+   -  **Note**: 索引从 ``0`` 开始. 它不包括标签栏
 
-   -  **Note**: works only in case of loading data directly from file
+-  ``categorical_feature``, 默认值=\ ``""``, 类型=string, 别名=\ ``categorical_column``, ``cat_feature``, ``cat_column``
 
-   -  **Note**: index starts from ``0``. And it doesn't count the label column
+   -  指定分类特征
 
--  ``categorical_feature``, default=\ ``""``, type=string, alias=\ ``categorical_column``, ``cat_feature``, ``cat_column``
+   -  用数字做索引, e.g. ``categorical_feature=0,1,2`` 意味着 column\_0, column\_1 和 column\_2 是分类特征
 
-   -  specify categorical features
+   -  为列名添加前缀 ``name:``, e.g. ``categorical_feature=name:c1,c2,c3`` 意味着 c1, c2 和 c3 是分类特征
 
-   -  use number for index, e.g. ``categorical_feature=0,1,2`` means column\_0, column\_1 and column\_2 are categorical features
+   -  **Note**: 只支持分类与 ``int`` 类型. 索引从 ``0`` 开始. 同时它不包括标签栏
 
-   -  add a prefix ``name:`` for column name, e.g. ``categorical_feature=name:c1,c2,c3`` means c1, c2 and c3 are categorical features
+   -  **Note**: 负值的值将被视为 **missing values**
 
-   -  **Note**: only supports categorical with ``int`` type. Index starts from ``0``. And it doesn't count the label column
+-  ``predict_raw_score``, 默认值=\ ``false``, 类型=bool, 别名=\ ``raw_score``, ``is_predict_raw_score``
 
-   -  **Note**: the negative values will be treated as **missing values**
+   -   只用于``prediction`` 任务
 
--  ``predict_raw_score``, default=\ ``false``, type=bool, alias=\ ``raw_score``, ``is_predict_raw_score``
+   -  设置为 ``true``只预测原始分数
 
-   -  only used in ``prediction`` task
+   -  设置为 ``false`` 只预测分数
 
-   -  set to ``true`` to predict only the raw scores
+-  ``predict_leaf_index``, 默认值=\ ``false``, 类型=bool, 别名=\ ``leaf_index``, ``is_predict_leaf_index``
 
-   -  set to ``false`` to predict transformed scores
+   -  只用于 ``prediction`` 任务
 
--  ``predict_leaf_index``, default=\ ``false``, type=bool, alias=\ ``leaf_index``, ``is_predict_leaf_index``
+   -  设置为 ``true`` to predict with leaf index of all trees
 
-   -  only used in ``prediction`` task
+-  ``predict_contrib``, 默认值=\ ``false``, 类型=bool, 别名=\ ``contrib``, ``is_predict_contrib``
 
-   -  set to ``true`` to predict with leaf index of all trees
+   -  只用于 ``prediction`` 任务
 
--  ``predict_contrib``, default=\ ``false``, type=bool, alias=\ ``contrib``, ``is_predict_contrib``
+   -  设置为 ``true`` 预估`SHAP values`_, 这代表了每个特性对每个预测的贡献。
+      生成的特征+1的值，其中最后一个值是模型输出的预期值，而不是训练数据
 
-   -  only used in ``prediction`` task
+-  ``bin_construct_sample_cnt``, 默认值=\ ``200000``, 类型=int, 别名=\ ``subsample_for_bin``
 
-   -  set to ``true`` to estimate `SHAP values`_, which represent how each feature contributs to each prediction.
-      Produces number of features + 1 values where the last value is the expected value of the model output over the training data
+   -  用来构建直方图的数据的数量
 
--  ``bin_construct_sample_cnt``, default=\ ``200000``, type=int, alias=\ ``subsample_for_bin``
+   -  在设置更大的数据时，会提供更好的培训效果，但会增加数据加载时间
 
-   -  number of data that sampled to construct histogram bins
+   -  如果数据非常稀疏，则将其设置为更大的值
 
-   -  will give better training result when set this larger, but will increase data loading time
+-  ``num_iteration_predict``, 默认值=\ ``-1``, 类型=int
 
-   -  set this to larger value if data is very sparse
+   -  只用于 ``prediction`` 任务
+   -  用于指定在预测中使用多少经过培训的迭代
 
--  ``num_iteration_predict``, default=\ ``-1``, type=int
+   -  ``<= 0`` 意味着没有限制
 
-   -  only used in ``prediction`` task
-   -  use to specify how many trained iterations will be used in prediction
+-  ``pred_early_stop``, 默认值=\ ``false``, 类型=bool
 
-   -  ``<= 0`` means no limit
+   - 如果``true``将使用提前停止来加速预测。可能影响精度
 
--  ``pred_early_stop``, default=\ ``false``, type=bool
+-  ``pred_early_stop_freq``, 默认值=\ ``10``, 类型=int
 
-   -  if ``true`` will use early-stopping to speed up the prediction. May affect the accuracy
+   - 检查早期early-stopping的频率
 
--  ``pred_early_stop_freq``, default=\ ``10``, type=int
+-  ``pred_early_stop_margin``, 默认值=\ ``10.0``, 类型=double
 
-   -  the frequency of checking early-stopping prediction
+   -  t提前early-stopping的边际阈值
 
--  ``pred_early_stop_margin``, default=\ ``10.0``, type=double
+-  ``use_missing``, 默认值=\ ``true``, 类型=bool
 
-   -  the threshold of margin in early-stopping prediction
+   -  设置为 ``false`` 禁用丢失值的特殊句柄
 
--  ``use_missing``, default=\ ``true``, type=bool
+-  ``zero_as_missing``, 默认值=\ ``false``, 类型=bool
 
-   -  set to ``false`` to disable the special handle of missing value
+   -  设置为 ``true`` 将所有的0都视为缺失的值 (包括 libsvm/sparse 矩阵中未显示的值)
 
--  ``zero_as_missing``, default=\ ``false``, type=bool
+   -  设置为 ``false`` 使用 ``na`` 代表缺失值
 
-   -  set to ``true`` to treat all zero as missing values (including the unshown values in libsvm/sparse matrics)
+-  ``init_score_file``, 默认值=\ ``""``, 类型=string
 
-   -  set to ``false`` to use ``na`` to represent missing values
+   -  训练初始分数文件的路径, ``""`` 将使用 ``train_data_file`` + ``.init`` (如果存在)
 
--  ``init_score_file``, default=\ ``""``, type=string
+-  ``valid_init_score_file``, 默认值=\ ``""``, 类型=multi-string
 
-   -  path to training initial score file, ``""`` will use ``train_data_file`` + ``.init`` (if exists)
+   -  验证初始分数文件的路径, ``""`` 将使用 ``valid_data_file`` + ``.init`` (如果存在)
 
--  ``valid_init_score_file``, default=\ ``""``, type=multi-string
+   -  通过 ``,`` 对multi-validation进行分离
 
-   -  path to validation initial score file, ``""`` will use ``valid_data_file`` + ``.init`` (if exists)
-
-   -  separate by ``,`` for multi-validation data
-
-Objective Parameters
+目标参数
 --------------------
 
--  ``sigmoid``, default=\ ``1.0``, type=double
+-  ``sigmoid``, 默认值=\ ``1.0``, 类型=double
 
-   -  parameter for sigmoid function. Will be used in ``binary`` classification and ``lambdarank``
+   -  sigmoid 函数的参数. 将用于 ``binary`` 分类 和 ``lambdarank``
 
--  ``alpha``, default=\ ``0.9``, type=double
+-  ``alpha``, 默认值=\ ``0.9``, 类型=double
 
-   -  parameter for `Huber loss`_ and `Quantile regression`_. Will be used in ``regression`` task
+   -   `Huber loss`_ 和 `Quantile regression`_ 的参数. 将用于``regression`` 任务
 
--  ``fair_c``, default=\ ``1.0``, type=double
+-  ``fair_c``, 默认值=\ ``1.0``, 类型=double
 
-   -  parameter for `Fair loss`_. Will be used in ``regression`` task
+   -   `Fair loss`_ 的参数. 将用于 ``regression`` 任务
 
--  ``gaussian_eta``, default=\ ``1.0``, type=double
+-  ``gaussian_eta``, 默认值=\ ``1.0``, 类型=double
 
-   -  parameter to control the width of Gaussian function. Will be used in ``regression_l1`` and ``huber`` losses
+   -  控制高斯函数的宽度的参数. 将用于``regression_l1`` 和 ``huber`` losses
 
--  ``poisson_max_delta_step``, default=\ ``0.7``, type=double
+-  ``poisson_max_delta_step``, 默认值=\ ``0.7``, 类型=double
 
-   -  parameter for `Poisson regression`_ to safeguard optimization
+   -  `Poisson regression`_ 的参数用于维护优化
 
--  ``scale_pos_weight``, default=\ ``1.0``, type=double
+-  ``scale_pos_weight``, 默认值=\ ``1.0``, 类型=double
 
-   -  weight of positive class in ``binary`` classification task
+   -  正值的权重 ``binary`` 分类 任务
 
--  ``boost_from_average``, default=\ ``true``, type=bool
+-  ``boost_from_average``, 默认值=\ ``true``, 类型=bool
 
-   -  only used in ``regression`` task
+   -  只用于 ``regression`` 任务
 
-   -  adjust initial score to the mean of labels for faster convergence
+   -  将初始分数调整为更快收敛速度的平均值
 
--  ``is_unbalance``, default=\ ``false``, type=bool, alias=\ ``unbalanced_sets``
+-  ``is_unbalance``, 默认值=\ ``false``, 类型=bool, 别名=\ ``unbalanced_sets``
 
-   -  used in ``binary`` classification
+   -  用于 ``binary`` 分类
    
-   -  set this to ``true`` if training data are unbalance
+   - 如果培训数据不平衡 设置为 ``true``
 
--  ``max_position``, default=\ ``20``, type=int
+-  ``max_position``, 默认值=\ ``20``, 类型=int
 
-   -  used in ``lambdarank``
+   -  用于 ``lambdarank``
 
-   -  will optimize `NDCG`_ at this position
+   -  将在这个`NDCG`_位置优化
 
--  ``label_gain``, default=\ ``0,1,3,7,15,31,63,...``, type=multi-double
+-  ``label_gain``, 默认值=\ ``0,1,3,7,15,31,63,...``, 类型=multi-double
 
-   -  used in ``lambdarank``
+   -  用于 ``lambdarank``
 
-   -  relevant gain for labels. For example, the gain of label ``2`` is ``3`` if using default label gains
+   -  有关获得标签. 列如, 如果使用默认标签增益 这个``2``的标签则是``3``
 
-   -  separate by ``,``
+   -  使用 ``,`` 分隔
 
--  ``num_class``, default=\ ``1``, type=int, alias=\ ``num_classes``
+-  ``num_class``, 默认值=\ ``1``, 类型=int, 别名=\ ``num_classes``
 
-   -  only used in ``multiclass`` classification
+   -  只用于 ``multiclass`` 分类
 
--  ``reg_sqrt``, default=\ ``false``, type=bool
+-  ``reg_sqrt``, 默认值=\ ``false``, 类型=bool
 
-   -  only used in ``regression``
+   -  只用于 ``regression``
+   
+   -  适合``sqrt(label)``相反，预测结果也会自动转换成``pow2(prediction)``
 
-   -  will fit ``sqrt(label)`` instead and prediction result will be also automatically converted to ``pow2(prediction)``
-
-Metric Parameters
+度量参数
 -----------------
 
--  ``metric``, default={``l2`` for regression}, {``binary_logloss`` for binary classification}, {``ndcg`` for lambdarank}, type=multi-enum,
+-  ``metric``, 默认值={``l2`` for regression}, {``binary_logloss`` for binary classification}, {``ndcg`` for lambdarank}, 类型=multi-enum,
    options=\ ``l1``, ``l2``, ``ndcg``, ``auc``, ``binary_logloss``, ``binary_error`` ...
 
-   -  ``l1``, absolute loss, alias=\ ``mean_absolute_error``, ``mae``
+   -  ``l1``, absolute loss, 别名=\ ``mean_absolute_error``, ``mae``
 
-   -  ``l2``, square loss, alias=\ ``mean_squared_error``, ``mse``
+   -  ``l2``, square loss, 别名=\ ``mean_squared_error``, ``mse``
 
-   -  ``l2_root``, root square loss, alias=\ ``root_mean_squared_error``, ``rmse``
+   -  ``l2_root``, root square loss, 别名=\ ``root_mean_squared_error``, ``rmse``
 
    -  ``quantile``, `Quantile regression`_
 
@@ -594,100 +593,100 @@ Metric Parameters
 
    -  ``binary_logloss``, `log loss`_
 
-   -  ``binary_error``, for one sample: ``0`` for correct classification, ``1`` for error classification
+   -  ``binary_error``, 样本: ``0`` 的正确分类, ``1`` 错误分类
 
-   -  ``multi_logloss``, log loss for mulit-class classification
+   -  ``multi_logloss``, mulit-class 损失日志分类
 
-   -  ``multi_error``, error rate for mulit-class classification
+   -  ``multi_error``, error rate for mulit-class 出错率分类
 
-   -  ``xentropy``, cross-entropy (with optional linear weights), alias=\ ``cross_entropy``
+   -  ``xentropy``, cross-entropy (与可选的线性权重), 别名=\ ``cross_entropy``
 
-   -  ``xentlambda``, "intensity-weighted" cross-entropy, alias=\ ``cross_entropy_lambda``
+   -  ``xentlambda``, "intensity-weighted" 交叉熵, 别名=\ ``cross_entropy_lambda``
 
-   -  ``kldiv``, `Kullback-Leibler divergence`_, alias=\ ``kullback_leibler``
+   -  ``kldiv``, `Kullback-Leibler divergence`_, 别名=\ ``kullback_leibler``
 
-   -  support multi metrics, separated by ``,``
+   -  支持多指标, 使用 ``,``分隔
 
--  ``metric_freq``, default=\ ``1``, type=int
+-  ``metric_freq``, 默认值=\ ``1``, 类型=int
 
-   -  frequency for metric output
+   -  频率指标输出
 
--  ``train_metric``, default=\ ``false``, type=bool, alias=\ ``training_metric``, ``is_training_metric``
+-  ``train_metric``, 默认值=\ ``false``, 类型=bool, 别名=\ ``training_metric``, ``is_training_metric``
 
-   -  set this to ``true`` if you need to output metric result of training
+   - 如果你需要输出训练的度量结果则设置 ``true``
 
--  ``ndcg_at``, default=\ ``1,2,3,4,5``, type=multi-int, alias=\ ``ndcg_eval_at``, ``eval_at``
+-  ``ndcg_at``, 默认值=\ ``1,2,3,4,5``, 类型=multi-int, 别名=\ ``ndcg_eval_at``, ``eval_at``
 
-   -  `NDCG`_ evaluation positions, separated by ``,``
+   -  `NDCG`_ 职位评估, 使用 ``,``分隔
 
-Network Parameters
+网络参数
 ------------------
 
-Following parameters are used for parallel learning, and only used for base (socket) version.
+以下参数用于并行学习，只用于基本(socket)版本。
 
--  ``num_machines``, default=\ ``1``, type=int, alias=\ ``num_machine``
+-  ``num_machines``, 默认值=\ ``1``, 类型=int, 别名=\ ``num_machine``
 
-   -  used for parallel learning, the number of machines for parallel learning application
+   -  用于并行学习的并行学习应用程序的数量
 
-   -  need to set this in both socket and mpi versions
+   -  需要在socket和mpi版本中设置这个
 
--  ``local_listen_port``, default=\ ``12400``, type=int, alias=\ ``local_port``
+-  ``local_listen_port``, 默认值=\ ``12400``, 类型=int, 别名=\ ``local_port``
 
-   -  TCP listen port for local machines
+   -  监听本地机器的TCP端口
 
-   -  you should allow this port in firewall settings before training
+   -  在培训之前，您应该再防火墙设置中放开该端口
 
--  ``time_out``, default=\ ``120``, type=int
+-  ``time_out``, 默认值=\ ``120``, 类型=int
 
-   -  socket time-out in minutes
+   -    允许socket几分钟内超时
 
--  ``machine_list_file``, default=\ ``""``, type=string, alias=\ ``mlist``
+-  ``machine_list_file``, 默认值=\ ``""``, 类型=string, 别名=\ ``mlist``
 
-   -  file that lists machines for this parallel learning application
+   -  为这个并行学习应用程序列出机器的文件
 
-   -  each line contains one IP and one port for one machine. The format is ``ip port``, separate by space
+   -  每一行包含一个IP和一个端口为一台机器。格式是ip port，由空格分隔
 
-GPU Parameters
+GPU 参数
 --------------
 
--  ``gpu_platform_id``, default=\ ``-1``, type=int
+-  ``gpu_platform_id``, 默认值=\ ``-1``, 类型=int
 
-   -  OpenCL platform ID. Usually each GPU vendor exposes one OpenCL platform.
+   -  OpenCL 平台 ID. 通常每个GPU供应商都会公开一个OpenCL平台。
 
-   -  default value is ``-1``, means the system-wide default platform
+   -  默认值为 ``-1``, 意味着整个系统平台
 
--  ``gpu_device_id``, default=\ ``-1``, type=int
+-  ``gpu_device_id``, 默认值=\ ``-1``, 类型=int
 
-   -  OpenCL device ID in the specified platform. Each GPU in the selected platform has a unique device ID
+   -  OpenCL设备ID在指定的平台上。 在选定的平台上的每一个GPU都有一个唯一的设备ID
 
-   -  default value is ``-1``, means the default device in the selected platform
+   -  默认值为``-1``, 这个默认值意味着选定平台上的设备
 
--  ``gpu_use_dp``, default=\ ``false``, type=bool
+-  ``gpu_use_dp``, 默认值=\ ``false``, 类型=bool
 
-   -  set to ``true`` to use double precision math on GPU (default using single precision)
+   -  设置为 ``true`` 在GPU上使用双精度GPU (默认使用单精度)
   
-Convert Model Parameters
+模型参数
 ------------------------
 
-This feature is only supported in command line version yet.
+该特性仅在命令行版本中得到支持。
 
--  ``convert_model_language``, default=\ ``""``, type=string
+-  ``convert_model_language``, 默认值=\ ``""``, 类型=string
 
-   -  only ``cpp`` is supported yet
+   -  只支持``cpp``
 
-   -  if ``convert_model_language`` is set when ``task`` is set to ``train``, the model will also be converted
+   -  如果 ``convert_model_language`` 设置为 ``task``时 该模型也将转换为 ``train``, 
 
--  ``convert_model``, default=\ ``"gbdt_prediction.cpp"``, type=string
+-  ``convert_model``, 默认值=\ ``"gbdt_prediction.cpp"``, 类型=string
 
-   -  output file name of converted model
+   -  转换模型的输出文件名
 
-Others
+其他
 ------
 
-Continued Training with Input Score
+持续训练输入分数
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-LightGBM supports continued training with initial scores. It uses an additional file to store these initial scores, like the following:
+LightGBM支持对初始得分进行持续的培训。它使用一个附加的文件来存储这些初始值，如下:
 
 ::
 
@@ -696,15 +695,15 @@ LightGBM supports continued training with initial scores. It uses an additional 
     0.9
     ...
 
-It means the initial score of the first data row is ``0.5``, second is ``-0.1``, and so on.
-The initial score file corresponds with data file line by line, and has per score per line.
-And if the name of data file is ``train.txt``, the initial score file should be named as ``train.txt.init`` and in the same folder as the data file.
-In this case LightGBM will auto load initial score file if it exists.
+它意味着最初的得分第一个数据行是``0.5`,第二个是``-0.1``等等。
+初始得分文件与数据文件逐行对应，每一行有一个分数。
+如果数据文件的名称是``train.txt`，最初的分数文件应该被命名为``train.txt.init``与作为数据文件在同一文件夹。
+在这种情况下，LightGBM将自动加载初始得分文件，如果它存在的话。
 
-Weight Data
+权重数据
 ~~~~~~~~~~~
 
-LightGBM supporta weighted training. It uses an additional file to store weight data, like the following:
+LightGBM 加权训练。它使用一个附加文件来存储权重数据，如下:
 
 ::
 
@@ -713,20 +712,19 @@ LightGBM supporta weighted training. It uses an additional file to store weight 
     0.8
     ...
 
-It means the weight of the first data row is ``1.0``, second is ``0.5``, and so on.
-The weight file corresponds with data file line by line, and has per weight per line.
-And if the name of data file is ``train.txt``, the weight file should be named as ``train.txt.weight`` and in the same folder as the data file.
-In this case LightGBM will auto load weight file if it exists.
+它意味的重压着第一个数据行是``1.0``,第二个是``0.5``,等等。
+权重文件按行与数据文件行相对应，每行的权重为。
+如果数据文件的名称是``train.txt``，应该将重量文件命名为``train.txt.weight` 与数据文件相同的文件夹。
+在这种情况下，LightGBM将自动加载权重文件，如果它存在的话。
 
 **update**:
-You can specific weight column in data file now. Please refer to parameter ``weight`` in above.
+现在可以在数据文件中指定``weight``列。请参阅以上参数的参数。
 
-Query Data
+查询数据
 ~~~~~~~~~~
 
-For LambdaRank learning, it needs query information for training data.
-LightGBM use an additional file to store query data, like the following:
-
+对于LambdaRank的学习，它需要查询信息来训练数据。
+LightGBM使用一个附加文件来存储查询数据，如下:
 ::
 
     27
@@ -734,15 +732,14 @@ LightGBM use an additional file to store query data, like the following:
     67
     ...
 
-It means first ``27`` lines samples belong one query and next ``18`` lines belong to another, and so on.
+它意味着第一个“27”“行样本属于一个查询和下一个``18``行属于另一个,等等。
+**Note**: 数据应该由查询来排序.
 
-**Note**: data should be ordered by the query.
-
-If the name of data file is ``train.txt``, the query file should be named as ``train.txt.query`` and in same folder of training data.
-In this case LightGBM will load the query file automatically if it exists.
+如果数据文件的名称是``train.txt`,这个查询文件应该被命名为``train.txt.query``查询在相同的培训数据文件夹中。
+在这种情况下，LightGBM将自动加载查询文件，如果它存在的话。
 
 **update**:
-You can specific query/group id in data file now. Please refer to parameter ``group`` in above.
+现在可以在数据文件中指定特定的 query/group id。请参阅上面的参数组。
 
 .. _Laurae++ Interactive Documentation: https://sites.google.com/view/lauraepp/parameters
 
