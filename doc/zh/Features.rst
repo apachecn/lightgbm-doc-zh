@@ -1,23 +1,23 @@
 特性
 ====
 
-这篇文档是对LightGBM的特点和其中用到的算法的简短介绍
+这篇文档是对 LightGBM 的特点和其中用到的算法的简短介绍
 
 本页不包含详细的算法，如果你对这些算法感兴趣可以查阅引用的论文或者源代码
 
 速度和内存使用的优化
 -------------------
 
-许多提升工具对于决策树的学习使用基于 pre-sorted 的算法\ `[1, 2] <#references>`__ (例如，在xgboost中默认的算法) ，这是一个简单的解决方案，但是不易于优化。
+许多提升工具对于决策树的学习使用基于 pre-sorted 的算法 \ `[1, 2] <#references>`__ (例如，在xgboost中默认的算法) ，这是一个简单的解决方案，但是不易于优化。
 
-LightGBM 利用基于 histogram 的算法\ `[3, 4, 5] <#references>`__，通过将连续特征（属性）值分段为 discrete bins 来加快训练的速度并减少内存的使用。
-如下的是基于histogram算法的优点：
+LightGBM 利用基于 histogram 的算法 \ `[3, 4, 5] <#references>`__，通过将连续特征（属性）值分段为 discrete bins 来加快训练的速度并减少内存的使用。
+如下的是基于 histogram 算法的优点：
 
 -  **减少分割增益的计算量**
 
-   -  Pre-sorted算法需要 ``O(#data)`` 次的计算
+   -  Pre-sorted 算法需要 ``O(#data)`` 次的计算
 
-   -  Histogram算法只需要计算 ``O(#bins)`` 次, 并且 ``#bins`` 远少于 ``#data`` 
+   -  Histogram 算法只需要计算 ``O(#bins)`` 次, 并且 ``#bins`` 远少于 ``#data`` 
 
       -  这个仍然需要 ``O(#data)`` 次来构建直方图, 而这仅仅包含总结操作
 
@@ -50,8 +50,8 @@ Leaf-wise (Best-first) 的决策树生长策略
 .. image:: ./_static/images/level-wise.png
    :align: center
 
-LightGBM 通过 leaf-wise (best-first)\ `[6] <#references>`__策略来生长树。它将选取具有最大 delta loss 的叶节点来生长。
-当生长相同的 ``#leaf``，leaf-wise 算法可以比level-wise算法减少更多的损失。
+LightGBM 通过 leaf-wise (best-first)\ `[6] <#references>`__ 策略来生长树。它将选取具有最大 delta loss 的叶节点来生长。
+当生长相同的 ``#leaf``，leaf-wise 算法可以比 level-wise 算法减少更多的损失。
 
 当 ``#data`` 较小的时候，leaf-wise 可能会造成过拟合。
 所以，LightGBM 可以利用额外的参数 ``max_depth`` 来限制树的深度并避免过拟合（树的生长仍然通过 leaf-wise 策略）。
@@ -67,7 +67,7 @@ LightGBM 通过 leaf-wise (best-first)\ `[6] <#references>`__策略来生长树�
 原因是，对于一个基数较大的类别特征，学习树会生长的非常不平衡，并且需要非常深的深度才能来达到较好的准确率。
 
 事实上，最好的解决方案是将类别特征划分为两个子集，总共有 ``2^(k-1) - 1`` 种可能的划分
-但是对于回归树\ `[7] <#references>`__有个有效的解决方案。为了寻找最优的划分需要大约 ``k * log(k)`` 。
+但是对于回归树 \ `[7] <#references>`__ 有个有效的解决方案。为了寻找最优的划分需要大约 ``k * log(k)`` .
 
 基本的思想是根据训练目标的相关性对类别进行重排序。
 更具体的说，根据累加值(``sum_gradient / sum_hessian``)重新对（类别特征的）直方图进行排序，然后在排好序的直方图中寻找最好的分割点。
@@ -75,8 +75,8 @@ LightGBM 通过 leaf-wise (best-first)\ `[6] <#references>`__策略来生长树�
 网络通信的优化
 -------------
 
-LightGBM 中的并行学习，仅仅需要使用一些聚合通信算法，例如"All reduce", "All gather" 和 "Reduce scatter"。
-LightGBM 实现了 state-of-art 算法\ `[8] <#references>`__。
+LightGBM 中的并行学习，仅仅需要使用一些聚合通信算法，例如 "All reduce", "All gather" 和 "Reduce scatter".
+LightGBM 实现了 state-of-art 算法\ `[8] <#references>`__ .
 这些聚合通信算法可以提供比点对点通信更好的性能。
 
 Optimization in Parallel Learning
