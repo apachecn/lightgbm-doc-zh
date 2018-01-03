@@ -1,10 +1,10 @@
-LightGBM 常见问题解答
-============
+LightGBM FAQ 常见问题解答
+=========================
 
 内容
 ~~~~~~~~
 
--  `关键问题  <#关键问题>`__
+-  `关键问题 <#关键问题>`__
 
 -  `LightGBM <#lightgbm>`__
 
@@ -17,23 +17,23 @@ LightGBM 常见问题解答
 关键问题
 ~~~~~~~~
 
-在使用LightGBM遇到关键问题时（程序奔溃，预测结果错误，无意义输出...）,你应该联系谁？
+在使用 LightGBM 遇到坑爹的问题时（程序奔溃，预测结果错误，无意义输出...）,你应该联系谁？
 
-如果你的问题不是那么紧急，可以把问题放到 `Microsoft/LightGBM repository <https://github.com/Microsoft/LightGBM/issues>`__。
+如果你的问题不是那么紧急，可以把问题放到 `Microsoft/LightGBM repository <https://github.com/Microsoft/LightGBM/issues>`__.
 
-如果你的问题急需要解决，首先要明确你有哪些错误：
+如果你的问题急需要解决，首先要明确你有哪些错误:
 
--  你认为问题会不会复现在CLI（命令行接口），R或者Python上？
+-  你认为问题会不会复现在 CLI（命令行接口），R 或者 Python上 ？
 
--  还是只会在某个特定的包（R或者Python）上出现?
+-  还是只会在某个特定的包（R 或者 Python）上出现?
 
--  还是会在某个特定的编译器（gcc或者MinGW）上出现？
+-  还是会在某个特定的编译器（gcc 或者 MinGW）上出现？
 
--  还是会在某个特定的操作系统（Windows或者Linux）上出现？
+-  还是会在某个特定的操作系统（Windows 或者 Linux）上出现？
 
 -  你能用一个简单的例子复现这些问题吗？
 
--  你能（或者不能）在去掉所有的优化信息和在debug模式下编译LightGBM时复现这些问题吗？
+-  你能（或者不能）在去掉所有的优化信息和在 debug 模式下编译 LightGBM 时复现这些问题吗？
 
 当出现问题的时候，根据上述答案，随时可以@我们（不同的问题可以@不同的人，下面是各种不同类型问题的负责人），这样我们就能更快地帮助你解决问题。
 
@@ -45,8 +45,8 @@ LightGBM 常见问题解答
 -  `@StrikerRUS <https://github.com/StrikerRUS>`__ (Python-package)
 -  `@huanzhang12 <https://github.com/huanzhang12>`__ (GPU support)
 
-记住这是一个免费的/开放的社区支持，我们可能不能做到全天候的提供帮助。
---------------
+记住这是一个免费的/开放的社区支持，我们可能不能做到全天候的提供帮助.
+---------------------------------------------------------------------
 
 LightGBM
 ~~~~~~~~
@@ -98,7 +98,7 @@ LightGBM
    因为Visual Studio可能 `10x faster than MinGW <https://github.com/Microsoft/LightGBM/issues/749>`__，尤其是在很大的树上。
 --------------
 
-R包
+R 包
 ~~~~~~~~~
 
 -  **问题 1**：在训练先前的LightBGM模型时一个错误出现后，任何使用LightBGM的训练命令都不会起作用。
@@ -114,7 +114,7 @@ R包
    这是一个已知的bug：`Microsoft/LightGBM#539 <https://github.com/Microsoft/LightGBM/issues/539>`__。
 --------------
 
-Python包
+Python 包
 ~~~~~~~~~~~~~~
 
 -  **问题 1**：当从GitHub使用 ``python setup.py install`` 安装，我看到如下错误信息。
