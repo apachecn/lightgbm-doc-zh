@@ -56,7 +56,7 @@ To get good results using a leaf-wise tree, these are some important parameters:
 
 
 针对更快的训练速度
-----------------
+------------------
 -  Use bagging by setting ``bagging_fraction`` and ``bagging_freq``
 
 -  Use feature sub-sampling by setting ``feature_fraction``
