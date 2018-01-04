@@ -54,22 +54,26 @@ LightGBM
 -  **问题 1**：我可以去哪里找到关于LightBGM参数的更多详细内容？
 
 -  **方法 1**：可以看一下这个 `Parameters <./Parameters.rst>`__ and `Laurae++/Parameters <https://sites.google.com/view/lauraepp/parameters>`__ 网站。
+
 --------------
 
 -  **问题 2**：在一个有百万个特征的数据集中，（要在很长一段时间后才开始训练或者）训练根本没有开始。
 
 -  **方法 2**：对 ``bin_construct_sample_cnt`` 用一个较小的值和对 ``min_data`` 用一个较大的值。
+
 --------------
 
 -  **问题 3**：当在一个很大的数据集上使用LightBGM，我的电脑会耗尽内存。
 
 -  **方法 3**：很多方法啊：将 ``histogram_pool_size`` 参数设置成你想为LightGBM分配的MB(histogram\_pool\_size + dataset size = approximately RAM used),
    减少 ``num_leaves`` 或减少 ``max_bin`` （点这里 `Microsoft/LightGBM#562 <https://github.com/Microsoft/LightGBM/issues/562>`__）。
+
 --------------
 
 -  **问题 4**：我使用Windows系统。我应该使用Visual Studio或者MinGW编译LightBGM吗？
 
 -  **方法 4**：推荐使用 `Visual Studio <https://github.com/Microsoft/LightGBM/issues/542>`__，因为它的性能更好。
+
 --------------
 
 -  **问题 5**：当使用LightBGM，我每次运行得到的结果都不同（结果不能复现）。
@@ -77,12 +81,14 @@ LightGBM
 -  **方法 5**：这是一个很正常的问题，我们/你也无能为力。
    你可以试试使用 ``gpu_use_dp = true`` 来复现结果（点这里 `Microsoft/LightGBM#560 <https://github.com/Microsoft/LightGBM/pull/560#issuecomment-304561654>`__）。
    你也可以使用CPU的版本试试。
+
 --------------
 
 -  **问题 6**：Bagging在改变线程的数量时，是不能复现的。
 
 -  **方法 6**：由于LightBGM Bagging是多线程运行的，它的输出依赖于使用线程的数量。
    There is `no workaround currently <https://github.com/Microsoft/LightGBM/issues/632>`__。
+
 --------------
 
 -  **问题 7**：我试过使用随机森林模式，LightBGM崩溃啦！
@@ -90,12 +96,14 @@ LightGBM
 -  **方法 7**：这是设计的问题。
    你必须使用 ``bagging_fraction`` 和 ``feature_fraction`` 与1不同，要和 ``bagging_freq`` 结合使用。
    看这个例子 `this thread <https://github.com/Microsoft/LightGBM/issues/691>`__。
+
 --------------
 
 -  **问题 8**：当在一个很大的数据集上和很多核心系统使用LightBGMWindows系统时，CPU不是满负荷运行（例如只使用了10%的CPU）。
 
 -  **方法 8**：请使用 `Visual Studio <https://www.visualstudio.com/downloads/>`__，
    因为Visual Studio可能 `10x faster than MinGW <https://github.com/Microsoft/LightGBM/issues/749>`__，尤其是在很大的树上。
+
 --------------
 
 R 包
@@ -106,12 +114,14 @@ R 包
 -  **方法 1**：在R控制台中运行 ``lgb.unloader(wipe = TRUE)``，再重新创建LightBGM数据集（这会消除所有与LightBGM相关的变量）。
    由于这些指针，选择不去消除这些变量不会修复这些错误。
    这是一个已知的问题: `Microsoft/LightGBM#698 <https://github.com/Microsoft/LightGBM/issues/698>`__。
+
 --------------
 
 -  **问题 2**：我使用过 ``setinfo`` ,试过打印我的 ``lgb.Dataset`` ,结果R控制台无响应。
 
 -  **方法 2**：在使用 ``setinfo`` 后避免打印 ``lgb.Dataset``.
    这是一个已知的bug：`Microsoft/LightGBM#539 <https://github.com/Microsoft/LightGBM/issues/539>`__。
+
 --------------
 
 Python 包
@@ -128,6 +138,7 @@ Python 包
 -  **方法 1**：这个错误在新版本中应该会被解决。
    如果你还会遇到这个问题，试着在你的Python包中去掉 ``lightgbm.egg-info`` 文件夹，再重装一下，
    或者对照一下这个 `this thread on stackoverflow <http://stackoverflow.com/questions/18085571/pip-install-error-setup-script-specifies-an-absolute-path>`__。
+
 --------------
 
 -  **问题 2**：我看到错误信息如下
