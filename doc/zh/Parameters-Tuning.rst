@@ -21,7 +21,7 @@ LightGBM 使用 `leaf-wise <./Features.rst#leaf-wise-best-first-tree-growth>`__ 
 
 To get good results using a leaf-wise tree, these are some important parameters:
 
-想要在使用 leaf-wise 算法时得到好的结果, 这里有几个重要的参数值得注意：
+想要在使用 leaf-wise 算法时得到好的结果, 这里有几个重要的参数值得注意:
 
 1. ``num_leaves``. This is the main parameter to control the complexity of the tree model.
    Theoretically, we can set ``num_leaves = 2^(max_depth)`` to convert from depth-wise tree.
@@ -33,12 +33,12 @@ To get good results using a leaf-wise tree, these are some important parameters:
    Actually, the concept ``depth`` can be forgotten in leaf-wise tree, since it doesn't have a correct mapping from ``leaves`` to ``depth``.
 
 1. ``num_leaves``. 这是控制树模型复杂度的主要参数.
-   理论上, 借鉴 depth-wise 树, 我们可以设置 ``叶子数目 = 2^(树的最大深度)`` 
+   理论上, 借鉴 depth-wise 树, 我们可以设置 ``num_leaves = 2^(max_depth)`` 
    但是, 这种简单的转化在实际应用中表现不佳.
    这是因为, 当叶子数目相同时, leaf-wise 树要比 depth-wise 树深得多, 这就有可能导致过拟合.
-   因此, 当我们试着调整 ``叶子数目`` 的取值时, 应该让其小于 ``2^(树的最大深度)``.
-   举个例子, 当 ``树的最大深度=6`` 时(这里译者认为例子中, 树的最大深度应为7), depth-wise 树可以达到较高的准确率.但是如果设置 ``叶子数目`` 为 ``127`` 时, 有可能会导致过拟合, 而将其设置为 ``70`` 或 ``80`` 时可能会得到比 depth-wise 树更高的准确率.
-   其实, ``深度`` 的概念在 leaf-wise 树中并没有多大作用, 因为并不存在一个从 ``叶子数目`` 到 ``深度`` 的合理映射.
+   因此, 当我们试着调整 ``num_leaves`` 的取值时, 应该让其小于 ``2^(max_depth)``.
+   举个例子, 当 ``max_depth=6`` 时(这里译者认为例子中, 树的最大深度应为7), depth-wise 树可以达到较高的准确率.但是如果设置 ``叶子数目`` 为 ``127`` 时, 有可能会导致过拟合, 而将其设置为 ``70`` 或 ``80`` 时可能会得到比 depth-wise 树更高的准确率.
+   其实, ``depth`` 的概念在 leaf-wise 树中并没有多大作用, 因为并不存在一个从 ``leaves`` 到 ``depth`` 的合理映射.
  
 2. ``min_data_in_leaf``. This is a very important parameter to deal with over-fitting in leaf-wise tree.
    Its value depends on the number of training data and ``num_leaves``.
@@ -46,7 +46,7 @@ To get good results using a leaf-wise tree, these are some important parameters:
    In practice, setting it to hundreds or thousands is enough for a large dataset.
 
 2. ``min_data_in_leaf``. 这是处理 leaf-wise 树的过拟合问题中一个非常重要的参数. 
-   它的值取决于训练数据的样本个树和 ``叶子数目``.
+   它的值取决于训练数据的样本个树和 ``num_leaves``.
    将其设置的较大可以避免生成一个过深的树, 但有可能导致欠拟合.
    实际应用中, 对于大数据集, 设置其为几百或几千就足够了.
 
@@ -67,11 +67,11 @@ To get good results using a leaf-wise tree, these are some important parameters:
 
 -  Use parallel learning, refer to `并行学习指南 <./Parallel-Learning-Guide.rst>`__
 
--  通过设置 ``bagging 比例`` 和 ``bagging 频率`` 参数来使用 bagging 方法
+-  通过设置 ``bagging_fraction`` 和 ``bagging_freq`` 参数来使用 bagging 方法
 
--  通过设置 ``特征比例`` 参数来使用特征的子抽样
+-  通过设置 ``feature_fraction`` 参数来使用特征的子抽样
 
--  使用较小的 ``最大bin``
+-  使用较小的 ``max_bin``
 
 -  使用 ``save_binary`` 在未来的学习过程对数据加载进行加速
 
@@ -91,11 +91,11 @@ To get good results using a leaf-wise tree, these are some important parameters:
 
 -  Try ``dart``
 
--  使用较大的 ``最大 bin`` （学习速度可能变慢）
+-  使用较大的 ``max_bin`` （学习速度可能变慢）
 
--  使用较小的 ``学习速率`` 和较大的 ``迭代次数``
+-  使用较小的 ``learning_rate`` 和较大的 ``num_iterations``
 
--  使用较大的 ``叶子数目`` （可能导致过拟合）
+-  使用较大的 ``num_leaves`` （可能导致过拟合）
 
 -  使用更大的训练数据
 
