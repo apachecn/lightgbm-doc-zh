@@ -407,7 +407,7 @@ IO 参数
    -  为列名添加前缀 ``name:`` , e.g. ``query=name:query_id``
 
    -  **Note**: 数据应按照 query\_id.
-      索引从 ``0``开始.
+      索引从 ``0`` 开始.
       当传递 type 为索引时, 它不计算标签列, 例如当标签为列 0, 查询 id 为列 1 时, 正确的参数是查询 =0
 
 -  ``ignore_column``, default=\ ``""``, type=string, alias=\ ``ignore_feature``, ``blacklist``
@@ -436,7 +436,7 @@ IO 参数
 
 -  ``predict_raw_score``, default=\ ``false``, type=bool, alias=\ ``raw_score``, ``is_predict_raw_score``
 
-   -   只用于``prediction`` 任务
+   -  只用于 ``prediction`` 任务
 
    -  设置为 ``true``只预测原始分数
 
@@ -452,7 +452,7 @@ IO 参数
 
    -  只用于 ``prediction`` 任务
 
-   -  设置为 ``true`` 预估 `SHAP values`_, 这代表了每个特性对每个预测的贡献.
+   -  设置为 ``true`` 预估 `SHAP values`_, 这代表了每个特征对每个预测的贡献.
       生成的特征+1的值, 其中最后一个值是模型输出的预期值, 而不是训练数据
 
 -  ``bin_construct_sample_cnt``, default=\ ``200000``, type=int, alias=\ ``subsample_for_bin``
