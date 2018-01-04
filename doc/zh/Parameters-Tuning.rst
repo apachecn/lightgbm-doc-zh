@@ -95,7 +95,7 @@ To get good results using a leaf-wise tree, these are some important parameters:
 
 -  使用较小的 ``学习速率`` 和较大的 ``迭代次数``
 
--  使用较大的 ``叶子数目``（可能导致过拟合）
+-  使用较大的 ``叶子数目`` （可能导致过拟合）
 
 -  使用更大的训练数据
 
