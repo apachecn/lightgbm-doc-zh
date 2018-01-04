@@ -23,6 +23,8 @@
    进阶主题 <Advanced-Topics>
    FAQ <FAQ>
    开发指南 <Development-Guide>
+   项目贡献者 <project-contributors>
+   组织学习交流群: <apachecn-learning-group>
 
 .. toctree::
    :hidden:
