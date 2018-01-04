@@ -37,7 +37,7 @@ To get good results using a leaf-wise tree, these are some important parameters:
    但是, 这种简单的转化在实际应用中表现不佳.
    这是因为, 当叶子数目相同时, leaf-wise 树要比 depth-wise 树深得多, 这就有可能导致过拟合.
    因此, 当我们试着调整 ``num_leaves`` 的取值时, 应该让其小于 ``2^(max_depth)``.
-   举个例子, 当 ``max_depth=6`` 时(这里译者认为例子中, 树的最大深度应为7), depth-wise 树可以达到较高的准确率.但是如果设置 ``叶子数目`` 为 ``127`` 时, 有可能会导致过拟合, 而将其设置为 ``70`` 或 ``80`` 时可能会得到比 depth-wise 树更高的准确率.
+   举个例子, 当 ``max_depth=6`` 时(这里译者认为例子中, 树的最大深度应为7), depth-wise 树可以达到较高的准确率.但是如果设置 ``num_leaves`` 为 ``127`` 时, 有可能会导致过拟合, 而将其设置为 ``70`` 或 ``80`` 时可能会得到比 depth-wise 树更高的准确率.
    其实, ``depth`` 的概念在 leaf-wise 树中并没有多大作用, 因为并不存在一个从 ``leaves`` 到 ``depth`` 的合理映射.
  
 2. ``min_data_in_leaf``. This is a very important parameter to deal with over-fitting in leaf-wise tree.
