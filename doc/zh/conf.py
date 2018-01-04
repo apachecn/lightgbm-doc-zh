@@ -70,7 +70,7 @@ templates_path = ['_templates']
 master_doc = 'index'
 
 # General information about the project.
-project = 'LightGBM'
+project = u'LightGBM 中文文档'
 copyright = u'2017, Microsoft Corporation. Translated by ApacheCN 开源组织, 机器学习企鹅交流群: 629470233'
 author = 'Microsoft Corporation'
 
