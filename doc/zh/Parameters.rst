@@ -88,7 +88,7 @@
 
       -  在 lambdarank 任务中标签应该为 ``int`` type, 数值越大代表相关性越高 (e.g. 0:bad, 1:fair, 2:good, 3:perfect)
 
-      -  ``label_gain`` 可以被用来设置 ``int`` 标签的增益 (权重)
+      -  ``label_gain`` 可以被用来设置对应的标签的增益 (权重)
 
 -  ``boosting``, default=\ ``gbdt``, type=enum,
    options=\ ``gbdt``, ``rf``, ``dart``, ``goss``,
@@ -124,13 +124,13 @@
 
 -  ``learning_rate``, default=\ ``0.1``, type=double, alias=\ ``shrinkage_rate``
 
-   -  shrinkage rate (收缩率)
+   -  shrinkage rate (收缩率)，学习率
 
    -  在 ``dart`` 中, 它还影响了 dropped trees 的归一化权重
 
 -  ``num_leaves``, default=\ ``31``, type=int, alias=\ ``num_leaf``
 
-   -  一棵树上的叶子数
+   -  每个决策树的最大叶子数量
 
 -  ``tree_learner``, default=\ ``serial``, type=enum, options=\ ``serial``, ``feature``, ``data``, ``voting``, alias=\ ``tree``
 
@@ -158,7 +158,7 @@
 
 -  ``device``, default=\ ``cpu``, options=\ ``cpu``, ``gpu``
 
-   -  为树学习选择设备, 你可以使用 GPU 来获得更快的学习速度
+   -  你可以使用 GPU 来获得更快的学习速度
 
    -  **Note**: 建议使用较小的 ``max_bin`` (e.g. 63) 来获得更快的速度
 
@@ -172,18 +172,18 @@
 
 -  ``max_depth``, default=\ ``-1``, type=int
 
-   -  限制树模型的最大深度. 这可以在 ``#data`` 小的情况下防止过拟合. 树仍然可以通过 leaf-wise 生长.
+   -  限制树模型的最大深度. 这可以在 ``#data`` 小的情况下防止过拟合. 树仍然通过 leaf-wise 生长.
 
    -  ``< 0`` 意味着没有限制.
 
 -  ``min_data_in_leaf``, default=\ ``20``, type=int, alias=\ ``min_data_per_leaf`` , ``min_data``, ``min_child_samples``
 
-   -  一个叶子上数据的最小数量. 可以用来处理过拟合.
+   -  一个叶子上数据的最小数量. 可以用来防止过拟合.
 
 -  ``min_sum_hessian_in_leaf``, default=\ ``1e-3``, type=double,
    alias=\ ``min_sum_hessian_per_leaf``, ``min_sum_hessian``, ``min_hessian``, ``min_child_weight``
 
-   -  一个叶子上的最小 hessian 和. 类似于 ``min_data_in_leaf``, 可以用来处理过拟合.
+   -  一个叶子上的最小 hessian 和. 类似于 ``min_data_in_leaf``, 可以用来防止过拟合.
 
 -  ``feature_fraction``, default=\ ``1.0``, type=double, ``0.0 < feature_fraction < 1.0``, alias=\ ``sub_feature``, ``colsample_bytree``
 
@@ -192,7 +192,7 @@
 
    -  可以用来加速训练
 
-   -  可以用来处理过拟合
+   -  可以用来防止过拟合
 
 -  ``feature_fraction_seed``, default=\ ``2``, type=int
 
@@ -204,7 +204,7 @@
 
    -  可以用来加速训练
 
-   -  可以用来处理过拟合
+   -  可以用来防止过拟合
 
    -  **Note**: 为了启用 bagging, ``bagging_freq`` 应该设置为非零值
 
@@ -216,11 +216,11 @@
 
 -  ``bagging_seed`` , default=\ ``3``, type=int, alias=\ ``bagging_fraction_seed``
 
-   -  bagging 随机数种子
+   -  bagging 用的随机数种子
 
 -  ``early_stopping_round``, default=\ ``0``, type=int, alias=\ ``early_stopping_rounds``, ``early_stopping``
 
-   -  如果一个验证集的度量在 ``early_stopping_round`` 循环中没有提升, 将停止训练
+   -  如果一个验证集的精度在 连续的``early_stopping_round`` 中没有提升, 将停止训练
 
 -  ``lambda_l1``, default=\ ``0``, type=double, alias=\ ``reg_alpha``
 
@@ -270,23 +270,23 @@
 
 -  ``min_data_per_group``, default=\ ``100``, type=int
 
-   -  每个分类组的最小数据量
+   -  每个类别特征组包含的最小数据量，用于降低低频特征的影响。
 
 -  ``max_cat_threshold``, default=\ ``32``, type=int
 
-   -  用于分类特征
+   -  用于类别特征
 
-   -  限制分类特征的最大阈值
+   -  限制类别特征的最大阈值
 
 -  ``cat_smooth``, default=\ ``10``, type=double
 
-   -  用于分类特征
+   -  用于类别特征
 
-   -  这可以降低噪声在分类特征中的影响, 尤其是对数据很少的类别
+   -  这可以降低噪声在类别特征中的影响, 尤其是对数据很少的类别
 
 -  ``cat_l2``, default=\ ``10``, type=double
 
-   -  分类切分中的 L2 正则
+   -  类别特征切分中的 L2 正则
 
 -  ``max_cat_to_onehot``, default=\ ``4``, type=int
 
@@ -302,24 +302,22 @@ IO 参数
 -------------
 -  ``max_bin``, default=\ ``255``, type=int
 
-   -  工具箱的最大数特征值决定了容量
-      工具箱的最小数特征值可能会降低训练的准确性, 但是可能会增加一些一般的影响（处理过度学习）
+   -  对特征进行binned（分桶,离散化）的最大上限
+      较小的`max_bin`可能会降低训练的准确性, 但是会提高泛化能力（防止过拟合）
 
    -  LightGBM 将根据 ``max_bin`` 自动压缩内存。
       例如, 如果 maxbin=255, 那么 LightGBM 将使用 uint8t 的特性值
 
--  ``max_bin``, default=\ ``255``, type=int
-
 -  ``min_data_in_bin``, default=\ ``3``, type=int
-   -  单个数据箱的最小数, 使用此方法避免 one-data-one-bin（可能会过度学习）
+   -  每个bin包含的最小样本量, 使用这个参数防止每个bin里面的样本太少（防止过拟合）
 
--  ``data_r和om_seed``, default=\ ``1``, type=int
+-  ``data_random_seed``, default=\ ``1``, type=int
 
-   -  并行学习数据分隔中的随机种子 (不包括并行功能)
+   -  并行学习数据分隔中的随机种子 (在feature parallel模式不起作用)
 
 -  ``output_model``, default=\ ``LightGBM_model.txt``, type=string, alias=\ ``model_output``, ``model_out``
 
-   -  培训中输出的模型文件名
+   -  训练完成后输出的模型文件名
 
 -  ``input_model``, default=\ ``""``, type=string, alias=\ ``model_input``, ``model_in``
 
@@ -327,30 +325,16 @@ IO 参数
 
    -  对于 ``prediction`` 任务, 该模型将用于预测数据
 
-   -  对于 ``train`` 任务, 培训将从该模型继续
+   -  对于 ``train`` 任务, 训练将从该模型继续
 
 -  ``output_result``, default=\ ``LightGBM_predict_result.txt``,
    type=string, alias=\ ``predict_result``, ``prediction_result``
 
    -  ``prediction`` 任务的预测结果文件名
 
--  ``model_format``, default=\ ``text``, type=multi-enum, 可选项=\ ``text``, ``proto``
-
-   -  保存和加载模型的格式
-
-   -   ``text``, 使用文本字符串
-
-   -   ``proto``, 使用协议缓冲二进制格式
-
-   -  您可以通过使用逗号来进行多种格式的保存, 例如 ``text,proto``. 在这种情况下, ``model_format`` 将作为后缀添加 ``output_model``
-
-   -  **Note**: 不支持多种格式的加载
-
-   -  **Note**: 要使用这个参数, 您需要使用 build 版本 <./Installation-Guide.rst#protobuf-support>`__
-
 -  ``pre_partition``, default=\ ``false``, type=bool, alias=\ ``is_pre_partition``
 
-   -  用于并行学习(不包括功能并行)
+   -  用于并行学习(在特征并行中不起作用)
 
    -  ``true`` 如果训练数据 pre-partitioned, 不同的机器使用不同的分区
 
@@ -377,7 +361,7 @@ IO 参数
 
 -  ``header``, default=\ ``false``, type=bool, alias=\ ``has_header``
 
-   -  如果输入数据有标识头, 则在此处设置 ``true``
+   -  如果输入数据有标识头（列名）, 则在此处设置 ``true``
 
 -  ``label``, default=\ ``""``, type=string, alias=\ ``label_column``
 
@@ -391,7 +375,7 @@ IO 参数
 
    -  列的指定
 
-   -  用于索引的数字, e.g. ``weight=0`` 表示 column\_0 是权重点
+   -  用于索引的数字, e.g. ``weight=0`` 表示 column\_0 是weight列
 
    -  为列名添加前缀 ``name:``, e.g. ``weight=name:weight``
 
@@ -402,7 +386,7 @@ IO 参数
 
    -  指定 query/group ID 列
 
-   -  用数字做索引, e.g. ``query=0`` 意味着 column\_0 是这个查询的 Id
+   -  用数字做索引, e.g. ``query=0`` 意味着 column\_0 是这个query的 Id
 
    -  为列名添加前缀 ``name:`` , e.g. ``query=name:query_id``
 
@@ -412,7 +396,7 @@ IO 参数
 
 -  ``ignore_column``, default=\ ``""``, type=string, alias=\ ``ignore_feature``, ``blacklist``
 
-   -  在培训中指定一些忽略的列
+   -  在训练中指定一些被忽略的列
 
    -  用数字做索引, e.g. ``ignore_column=0,1,2`` 意味着 column\_0, column\_1 和 column\_2 将被忽略
 
@@ -459,14 +443,14 @@ IO 参数
 
    -  用来构建直方图的数据的数量
 
-   -  在设置更大的数据时, 会提供更好的培训效果, 但会增加数据加载时间
+   -  在设置更大的数据时, 会提供更好的训练效果, 但会增加数据加载时间
 
    -  如果数据非常稀疏, 则将其设置为更大的值
 
 -  ``num_iteration_predict``, default=\ ``-1``, type=int
 
    -  只用于 ``prediction`` 任务
-   -  用于指定在预测中使用多少经过培训的迭代
+   -  用于指定在预测中使用多少迭代
 
    -  ``<= 0`` 意味着没有限制
 
@@ -539,7 +523,7 @@ IO 参数
 
    -  用于 ``binary`` 分类
    
-   - 如果培训数据不平衡 设置为 ``true``
+   - 如果训练数据不平衡 设置为 ``true``
 
 -  ``max_position``, default=\ ``20``, type=int
 
@@ -634,7 +618,7 @@ IO 参数
 
    -  监听本地机器的TCP端口
 
-   -  在培训之前, 您应该再防火墙设置中放开该端口
+   -  在训练之前, 您应该再防火墙设置中放开该端口
 
 -  ``time_out``, default=\ ``120``, type=int
 
@@ -686,7 +670,7 @@ GPU 参数
 持续训练输入分数
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-LightGBM支持对初始得分进行持续的培训。它使用一个附加的文件来存储这些初始值, 如下:
+LightGBM支持对初始得分进行持续的训练。它使用一个附加的文件来存储这些初始值, 如下:
 
 ::
 
@@ -735,7 +719,7 @@ LightGBM 使用一个附加文件来存储查询数据, 如下:
 它意味着第一个 ``27`` 行样本属于一个查询和下一个 ``18`` 行属于另一个, 等等.
 **Note**: 数据应该由查询来排序.
 
-如果数据文件的名称是``train.txt`,这个查询文件应该被命名为``train.txt.query``查询在相同的培训数据文件夹中。
+如果数据文件的名称是``train.txt`,这个查询文件应该被命名为``train.txt.query``查询在相同的训练数据文件夹中。
 在这种情况下, LightGBM将自动加载查询文件, 如果它存在的话。
 
 **update**:
