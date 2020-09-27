@@ -45,6 +45,16 @@ LightGBM 是一个梯度 boosting 框架, 使用基于学习算法的决策树.
 *   [@孙永杰](https://github.com/apachecn/lightgbm-doc-zh)
 *   [@王贤才](https://github.com/apachecn/lightgbm-doc-zh)
 
+## 下载
+
+### NPM
+
+```
+npm install -g lightgbm-doc-zh
+lightgbm-doc-zh <port>
+# 访问 http://localhost:{port} 查看文档
+```
+
 ## 贡献指南
 
 为了使项目更加便于维护，我们将文档格式全部转换成了 Markdown，同时更换了页面生成器。后续维护工作将完全在 Markdown 上进行。
