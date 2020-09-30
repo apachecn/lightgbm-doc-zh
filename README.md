@@ -47,6 +47,14 @@ LightGBM 是一个梯度 boosting 框架, 使用基于学习算法的决策树.
 
 ## 下载
 
+### Docker
+
+```
+docker pull apachecn0/lightgbm-doc-zh
+docker run -tid -p <port>:80 apachecn0/lightgbm-doc-zh
+# 访问 http://localhost:{port} 查看文档
+```
+
 ### PYPI
 
 ```
