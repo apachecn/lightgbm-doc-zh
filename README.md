@@ -23,6 +23,7 @@ LightGBM 是一个梯度 boosting 框架, 使用基于学习算法的决策树.
 ## 文档地址
 
 +   [在线阅读](http://lightgbm.apachecn.org)
++   [在线阅读（Gitee）](https://apachecn.gitee.io/lightgbm-doc-zh/)
 
 ## 项目负责人
 
